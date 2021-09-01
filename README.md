@@ -5,7 +5,7 @@ Documentos do Front-end junto dos códigos do Back-end
 31/08
 Fórum{
 lado esquerdo separado para futuramente também ser usado no perfil do usuário (trazer esse assunto)
-lado esquerdo funcionado com exceção da situação (aluno ou ex-aluno)
+lado esquerdo dados do aluno funcionado com exceção da situação (aluno ou ex-aluno)
 
 Página fórum ficará vazia caso não tenha publicação
 
