@@ -26,3 +26,9 @@ Excluir publicação funcionando
   }
   
 }
+  
+01/09
+  Divulgar vagas funcionando
+  (a fazer){
+    perfil empresa (editar conta e excluir conta)
+  }
