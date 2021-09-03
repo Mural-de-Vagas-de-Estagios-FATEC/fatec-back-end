@@ -1,17 +1,16 @@
 <?php
-require_once("bd.php");
 $sqlVagas = "SELECT * FROM VAGAS";
 $queryVagas = mysqli_query($mysqli,$sqlVagas); 
 
 if(mysqli_num_rows($queryVagas) > 0) {
-    $sqlId = "SELECT * FROM VAGAS WHERE AUTOR=" . $_SESSION['id'];
+    $sqlId = "SELECT ID_VAGA FROM VAGAS WHERE AUTOR=" . $_SESSION['id'];
     $queryId = mysqli_query($mysqli,$sqlId);
     $infoId = mysqli_fetch_all($queryId);
 
     $cnt = sizeof($infoId);
     $j = sizeof($infoId) - 1;
     for ($i=0; $i <= $j ; $j--) {
-        $sqlPubli = "SELECT * FROM VAGAS WHERE AUTOR=" . $infoId[$j][0];
+        $sqlPubli = "SELECT * FROM VAGAS WHERE ID_VAGA=" . $infoId[$j][0];
         $queryPubli = mysqli_query($mysqli,$sqlPubli);
         $infoVagas = mysqli_fetch_row($queryPubli);
 
