@@ -32,6 +32,8 @@ Excluir publicação funcionando
   (a fazer){
     perfil empresa (editar conta e excluir conta)
   }
+  
+  
 03/09
   Área de vagas funcionando
   removido bug do divulgar vagas, onde só aparecia a primeira vaga divulgada pela empresa no lugar das novas publicações
