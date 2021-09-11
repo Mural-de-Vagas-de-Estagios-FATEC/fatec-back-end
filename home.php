@@ -94,7 +94,7 @@ require_once("verificar_login.php");
                     </div>
                     <div id="pagination-container"></div>
                     <footer>
-                        <p>© Todos os direitos Reservados - <a href="#">Fatec Itaquaquecetuba</a></p>
+                        <p>© Todos os direitos Reservados - <a href="http://www.fatecitaqua.edu.br/fatecitaqua/">Fatec Itaquaquecetuba</a></p>
                         <div class="social-icon">
                             <a href="https://www.instagram.com/fatecitaquaquecetuba/"><i class="fab fa-instagram"></i></a>
                             <a href="https://www.linkedin.com/company/fatec-itaquaquecetuba/"><i class="fab fa-linkedin"></i></a>
