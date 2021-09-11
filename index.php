@@ -127,7 +127,7 @@ if(isset($_POST['confirmar'])){//se o confirmar for pressionado
                 <a href="cadastros.html" class="button-dark">CADASTRE-SE</a>
             </div>
             <footer>
-                <p>© Todos os direitos Reservados - <a href="#">Fatec Itaquaquecetuba</a></p>
+                <p>© Todos os direitos Reservados - <a href="http://www.fatecitaqua.edu.br/fatecitaqua/">Fatec Itaquaquecetuba</a></p>
                 <div class="social-icon">
                         <a href="https://www.instagram.com/fatecitaquaquecetuba/"><i class="fab fa-instagram"></i></a>
                         <a href="https://www.linkedin.com/company/fatec-itaquaquecetuba/"><i class="fab fa-linkedin"></i></a>
