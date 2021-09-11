@@ -8,12 +8,10 @@ if(isset($_POST['excluir'])){
     header("forum.php");
 }
 if(isset($_POST['enviar'])){
-	$autor = $_SESSION['email'];
-	$nome = $_SESSION['nome'];
-	$situacao = 'Aluno ou Ex-Aluno refazer quando tiver a variavel aluno do cadastro';
+	$autor = $_SESSION['id'];
 	$publicacao = $_POST['txtaPublicacao'];
 
-	$sqlPublicar = "INSERT INTO FORUM (AUTOR, NOME, SITUACAO, PUBLICACAO, COMENTARIOS) VALUES ('$autor', '$nome', '$situacao', '$publicacao','null')";
+	$sqlPublicar = "INSERT INTO FORUM (AUTOR, PUBLICACAO, COMENTARIOS) VALUES ('$autor', '$publicacao','null')";
 	if(mysqli_query($mysqli,$sqlPublicar)){
 		header("Location: forum.php");//redireciona o usuário para a página principal
 	    exit();
@@ -35,6 +33,15 @@ if(isset($_POST['enviar'])){
     <link rel="stylesheet" href="./public/css/global.css">
     <link rel="stylesheet" href="./public/css/grid.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;900&family=Sen:wght@400;700&display=swap" rel="stylesheet">
+    <style type="text/css">
+        .link {
+            background: none;
+            border: none;
+            padding: 0;
+            padding-left: 10px;
+            font-size: 15px;
+            }
+    </style>
     <title>Divulgar Vagas</title>
 </head>
 
@@ -75,7 +82,7 @@ if(isset($_POST['enviar'])){
             	?>
                 
                 <div class="lado-direito">
-                    <p class="texto-perfil-hidden">Olá Pedro Henrique, Lorem Ipsum is simply dummy!</p>
+                    <p class="texto-perfil-hidden">Olá <?= $_SESSION['nome'] ?>, seja bem-vindo!</p>
                     <div class="title">
                         <div class="rect"></div> Fórum
                     </div>
