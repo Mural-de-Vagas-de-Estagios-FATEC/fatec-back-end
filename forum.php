@@ -1,6 +1,9 @@
 <?php
 require_once("bd.php");
 require_once("verificar_login.php");
+if($_SESSION['situacao'] == 'Empresa'){
+    header("Location: inicio.php");
+}
 if(isset($_POST['excluir'])){
     $idExcluir = $_POST['excluir'];
     $sqlExcluir = "DELETE FROM FORUM WHERE ID_PUBLICACAO=$idExcluir";
@@ -8,17 +11,18 @@ if(isset($_POST['excluir'])){
     header("forum.php");
 }
 if(isset($_POST['enviar'])){
-	$autor = $_SESSION['id'];
-	$publicacao = $_POST['txtaPublicacao'];
+    $autor = $_SESSION['id'];
+    $situacao = $_SESSION['situacao'];
+    $publicacao = $_POST['txtaPublicacao'];
 
-	$sqlPublicar = "INSERT INTO FORUM (AUTOR, PUBLICACAO, COMENTARIOS) VALUES ('$autor', '$publicacao','null')";
-	if(mysqli_query($mysqli,$sqlPublicar)){
-		header("Location: forum.php");//redireciona o usuário para a página principal
-	    exit();
-	}
-	else {
-		die("Erro no envio da publicação");
-	}
+    $sqlPublicar = "INSERT INTO FORUM (AUTOR, SITUACAO, PUBLICACAO, COMENTARIOS) VALUES ('$autor', '$situacao', '$publicacao','0')";
+    if(mysqli_query($mysqli,$sqlPublicar)){
+        header("Location: forum.php");//redireciona o usuário para a página principal
+        exit();
+    }
+    else {
+        //die("Erro no envio da publicação");
+    }
 
 }
 ?>
@@ -77,9 +81,9 @@ if(isset($_POST['enviar'])){
     <main>
         <section>
             <div class="container-perfil-flex">
-            	<?php
-            	include_once("lado_esquerdo.php");
-            	?>
+                <?php
+                include_once("lado_esquerdo.php");
+                ?>
                 
                 <div class="lado-direito">
                     <p class="texto-perfil-hidden">Olá <?= $_SESSION['nome'] ?>, seja bem-vindo!</p>
