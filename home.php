@@ -1,6 +1,9 @@
 <?php
 require_once("bd.php");
 require_once("verificar_login.php");
+if($_SESSION['situacao'] == 'Empresa'){
+    header("Location: inicio.php");
+}
 
 ?>
 
