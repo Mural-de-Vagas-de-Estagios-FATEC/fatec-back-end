@@ -2,44 +2,55 @@
 include('bd.php');
 session_start();
 if(isset($_SESSION['nome'])){//se estiver logado, encaminha para a tela de home
-	header("Location: home.php");
+    header("Location: home.php");
 }
 if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
-	$nome = $_POST['txtNome'];
-	$email = $_POST['txtEmail'];
-	$cidade = $_POST['cboCidade'];
-	$senha = password_hash($_POST['txtSenha'], PASSWORD_BCRYPT);
-	$confirmarSenha = password_hash($_POST['txtConfirmaSenha'], PASSWORD_BCRYPT);
-	$cnpj = $_POST['txtCnpj'];
-	$telefone = $_POST['txtTel'];
-	$celular = $_POST['txtCel'];
-	
+    $nome = $_POST['txtNome'];
+    $email = $_POST['txtEmail'];
+    $cidade = $_POST['cboCidade'];
+    $senha = password_hash($_POST['txtSenha'], PASSWORD_BCRYPT);
+    $cnpj = $_POST['txtCnpj'];
+    $telefone = $_POST['txtTel'];
+    $celular = $_POST['txtCel'];
+    if($_FILES['imagem']['size'] == 0){
+        $imagem = 'imagens/imagem-teste.jpg';
+    }
+    else {
+        $extensao = strtolower(substr($_FILES['imagem']['name'],-4));
+        $imagem = 'imagens/' . md5(time()) . $extensao;
+    }
+    
 
-	$sqlEmail = "SELECT * FROM empresas WHERE EMAIL='$email'";
-	$queryEmail = mysqli_query($mysqli,$sqlEmail);
-
-	if(mysqli_num_rows($queryEmail)){//verifica se o RA já está em uso
-	   	echo 'Email Já registrado';   
-	    }	    
-	//criar uma área para verificar a senha e para O Código
-	else{//se todos os campos forem preenchidos
-	    $sql_code = "INSERT INTO empresas (NOME, EMAIL, CIDADE, SENHA, CONFIRMARSENHA, CNPJ, TELEFONE, CELULAR) VALUES('$nome','$email', '$cidade' '$senha', '$confirmarSenha', '$cnpj', '$telefone', '$celular')";//código SQL para inserir os dados
-		    
-	    if(mysqli_query($mysqli,$sql_code)){//se o banco de dados fizer o registro
-	    	$_SESSION['nome'] = $nome;
-	    	$_SESSION['email'] = $email;
-	    	$_SESSION['cidade'] = $cidade;
-	    	$_SESSION['cnpj'] = $cnpj;
-			$_SESSION['telefone'] = $telefone;
-			$_SESSION['celular'] = $celular
-			header("Location: home.php");//redireciona o usuário para a página principal
-	        exit();
-		}
-	    else {
-		    echo "Erro";
-		    die("Não foi possível registrar no banco de dados, tente novamente mais tarde");
-		}
-	}
+    $sqlEmail = "SELECT * FROM usuários WHERE EMAIL='$email'";
+    $queryEmail = mysqli_query($mysqli,$sqlEmail);
+    $sqlEmailEgresso = "SELECT * FROM egresso WHERE EMAIL='$email'";
+    $queryEmailEgresso = mysqli_query($mysqli,$sqlEmailEgresso);
+    $sqlEmailEmpresa = "SELECT * FROM empresa WHERE EMAIL='$email'";
+    $queryEmailEmpresa = mysqli_query($mysqli,$sqlEmailEmpresa);
+    if(mysqli_num_rows($queryEmail)){//verifica se o Email já está em uso
+        echo 'Email Já registrado';   
+        }
+    elseif(mysqli_num_rows($queryEmailEgresso)){//verifica se o Email já está em uso no banco de dados do egresso
+        echo 'Email Já registrado';   
+        }
+    elseif(mysqli_num_rows($queryEmailEmpresa)){//verifica se o Email já está em uso no banco de dados da empresa (vai saber)
+        echo 'Email Já registrado';   
+        }       
+    //criar uma área para verificar a senha e para O Código
+    else{//se todos os campos forem preenchidos
+        $sql_code = "INSERT INTO empresa (NOME, EMAIL, CIDADE, SENHA, CNPJ, TELEFONE, CELULAR, IMAGEM) VALUES ('$nome','$email', '$cidade', '$senha', '$cnpj', '$telefone', '$celular', '$imagem')";//código SQL para inserir os dados
+            
+        if(mysqli_query($mysqli,$sql_code)){//se o banco de dados fizer o registro
+            if($imagem != 'imagens/imagem-teste.jpg'){
+                move_uploaded_file($_FILES['imagem']['tmp_name'], $imagem);
+            }
+            header("Location: index.php");//redireciona o usuário para a página principal
+            exit();
+        }
+        else {
+            die("Não foi possível registrar no banco de dados, tente novamente mais tarde");
+        }
+    }
 }
 
 ?>
@@ -54,7 +65,15 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
     <!-- <script src="public/Jquery/jquery-3.6.0.min.js"></script> -->
-
+    <script>
+        var loadFile = function(event) {
+    var output = document.getElementById('imgPerfil');
+    output.src = URL.createObjectURL(event.target.files[0]);
+    output.onload = function() {
+      URL.revokeObjectURL(output.src)
+    }
+  };
+    </script>
 
     <link rel="stylesheet" href="public/css/cadastro_empresa.css">
     <script src="public/js/cadastro_empresa.js"></script>
@@ -65,7 +84,7 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
 <body>
     <nav>
         <img src="public/assets/logo-fatec.png" alt="Logo Fatec de itaquaquecetuba" class="img_logo">
-        <a href="index.html">Home</a>
+        <a href="index.php">Home</a>
     </nav>
     <div class="conteudo">
         <div class="conteudo_titulo">
@@ -74,6 +93,7 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
             </div>
             <h1>Cadastro Empresa</h1>
         </div>
+        <form action="cadastro_empresa.php" id="formEmpresa" method="Post" enctype="multipart/form-data">
         <div class="conteudo_cadastro">
             <div class="div1 cadastro_div">
                 <label for="txtNome">Nome Empresa</label>
@@ -81,8 +101,9 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
             </div>
 
             <div class="div2 cadastro_div">
-                <input type="image" src="public/assets/perfil.png" alt="" id="imgPerfil">
-                <input type="button" value="Escolher imagem" id="btnImagem">
+                <input type="image" src="public/assets/perfil.png" width="105px" height="105px" alt="" id="imgPerfil">
+                    <input type="file" value="Escolher imagem" name="imagem" accept="image/png, image/jpeg" onchange="loadFile(event)" 
+                    id="btnImagem">
             </div>
 
             <div class="div3 cadastro_div">
@@ -125,10 +146,10 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
                 <input type="checkbox" name="checkTermos" id="checkTermos">
             </div> -->
         </div>
-
+        </form>
     </div>
     <div class="conteudo_botao">
-        <input type="submit" name="subCadastrar" class="btn_cadastro" value = "Cadastrar" >
+        <input type="submit" name="subCadastrar" form="formEmpresa" class="btn_cadastro" value = "Cadastrar" >
     </div>
 
     </div>
