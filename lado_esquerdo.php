@@ -2,7 +2,8 @@
                 <div class="lado-esquerdo">
                     <div class="altera-image">
                         <div class="imagem-perfil center">
-                            <img src="./public/assets/imagem-teste.jpg" alt="imagem da empresa">
+                            <img src="<?= $_SESSION['imagem']?>"/>
+                            
                         </div>
                         <label class="input-upload center">
                             <input type="file" name="" id="">
