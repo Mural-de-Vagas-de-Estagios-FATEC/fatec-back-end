@@ -10,18 +10,20 @@ if(isset($_POST['confirmar'])){//se o confirmar for pressionado
     $sql = "SELECT * FROM usuários WHERE EMAIL='$email'";
     $query = mysqli_query($mysqli,$sql);/*realiza o comando SQL, a variavel $mysqli
     está no arquivo do banco de dados*/
-    $sqlEmpresa = "SELECT * FROM EMPRESA WHERE EMAIL='$email'";
+    $sqlEgresso = "SELECT * FROM egresso WHERE EMAIL='$email'";
+    $queryEgresso = mysqli_query($mysqli,$sqlEgresso);
+    $sqlEmpresa = "SELECT * FROM empresa WHERE EMAIL='$email'";
     $queryEmpresa = mysqli_query($mysqli,$sqlEmpresa);
     if(mysqli_num_rows($query)){//se tiver alguma linha com a pesquisa efetuada retorna verdadeiro
         $infoUsuario = mysqli_fetch_row($query);
         $senhaBD = $infoUsuario[2];
         if(password_verify($senha, $senhaBD)){
-            //$_SESSION['RA'] = $infoUsuario[0];
             $_SESSION['nome'] = $infoUsuario[0];
             $_SESSION['email'] = $infoUsuario[1];
             $_SESSION['curso'] = $infoUsuario[3];
             $_SESSION['semestre'] = $infoUsuario[4];
-            $_SESSION['situacao'] = $infoUsuario[5];
+            $_SESSION['situacao'] = 'Aluno';
+            $_SESSION['imagem'] = $infoUsuario[5];
             $_SESSION['id']= $infoUsuario[6];
             header("Location: home.php");
             exit(); 
@@ -31,23 +33,39 @@ if(isset($_POST['confirmar'])){//se o confirmar for pressionado
         }
 
     }
-    elseif (mysqli_num_rows($queryEmpresa)) {
+    elseif (mysqli_num_rows($queryEgresso)){
+        $infoUsuario = mysqli_fetch_row($queryEgresso);
+        $senhaBD = $infoUsuario[2];
+        if(password_verify($senha, $senhaBD)){
+            $_SESSION['nome'] = $infoUsuario[0];
+            $_SESSION['email'] = $infoUsuario[1];
+            $_SESSION['curso'] = $infoUsuario[3];
+            $_SESSION['situacao'] = 'Egresso';
+            $_SESSION['imagem'] = $infoUsuario[5];
+            $_SESSION['id']= $infoUsuario[6];
+            header("Location: home.php");
+            exit(); 
+            }
+        else {// se não tiver linha com a pesquisa retorna senha ou email incorreto
+            echo 'Senha Incorreta';
+        }
+    }
+    elseif (mysqli_num_rows($queryEmpresa)){
         $infoEmpresa = mysqli_fetch_row($queryEmpresa);
-        $senhaBD = $infoEmpresa[2];
-        //if(password_verify($senha, $senhaBD)){
-        if($senha == $senhaBD){
+        $senhaBD = $infoEmpresa[3];
+        if(password_verify($senha, $senhaBD)){
             $_SESSION['nome'] = $infoEmpresa[0];
             $_SESSION['email'] = $infoEmpresa[1];
-            $_SESSION['telefone'] = $infoEmpresa[3];
-            $_SESSION['celular'] = $infoEmpresa[4];
-            $_SESSION['cidade'] = $infoEmpresa[5];
-            $_SESSION['cnpj'] = $infoEmpresa[6];
-            $_SESSION['id'] = $infoEmpresa[7];
+            $_SESSION['cidade'] = $infoEmpresa[2];
+            $_SESSION['cnpj'] = $infoEmpresa[4];
+            $_SESSION['telefone'] = $infoEmpresa[5];
+            $_SESSION['celular'] = $infoEmpresa[6];
+            $_SESSION['imagem'] = $infoEmpresa[7];
+            $_SESSION['id'] = $infoEmpresa[8];
             $_SESSION['situacao'] = "Empresa";
-            header("Location: home.php");
+            header("Location: inicio.php");
             exit();
         }
-        //}
     }
     else {
         echo 'Email Incorreto';
