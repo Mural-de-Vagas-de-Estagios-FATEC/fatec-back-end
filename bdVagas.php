@@ -1,9 +1,9 @@
 <?php
 
-$sqlVagas = "SELECT * FROM vagas ORDER BY ID_VAGA";
+$sqlVagas = "SELECT * FROM vagas";
 $queryVagas = mysqli_query($mysqli, $sqlVagas);
 if(mysqli_num_rows($queryVagas) > 0) {
-    $sqlId = "SELECT ID_VAGA FROM vagas";
+    $sqlId = "SELECT ID_VAGA FROM vagas ORDER BY ID_VAGA";
     $queryId = mysqli_query($mysqli, $sqlId);
     $infoId = mysqli_fetch_all($queryId);
 
