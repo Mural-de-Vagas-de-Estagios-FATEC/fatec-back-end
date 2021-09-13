@@ -1,11 +1,9 @@
 <?php
-require_once("bd.php");
-require_once("verificar_login.php");
 $sqlForum = "SELECT * FROM FORUM";
 $queryForum = mysqli_query($mysqli,$sqlForum); 
 
 if(mysqli_num_rows($queryForum) > 0) {
-    $sqlId = "SELECT ID_PUBLICACAO FROM FORUM";
+    $sqlId = "SELECT ID_PUBLICACAO FROM FORUM ORDER BY ID_PUBLICACAO";
     $queryId = mysqli_query($mysqli,$sqlId);
     $infoId = mysqli_fetch_all($queryId);
 
@@ -14,6 +12,14 @@ if(mysqli_num_rows($queryForum) > 0) {
         $sqlPubli = "SELECT * FROM FORUM WHERE ID_PUBLICACAO=" . $infoId[$j][0];
         $queryPubli = mysqli_query($mysqli,$sqlPubli);
         $infoForum = mysqli_fetch_row($queryPubli);
+        if($infoForum[1] == 'Aluno'){
+            $sqlAutor = "SELECT NOME, IMAGEM FROM usuários LEFT JOIN FORUM ON FORUM.AUTOR = usuários.ID_USUARIO WHERE ID_PUBLICACAO=" . $infoId[$j][0];
+        }
+        else {
+            $sqlAutor = "SELECT NOME, IMAGEM FROM egresso LEFT JOIN FORUM ON FORUM.AUTOR = egresso.ID_EGRESSO WHERE ID_PUBLICACAO=" . $infoId[$j][0];
+        }
+        $queryAutor = mysqli_query($mysqli,$sqlAutor);
+        $infoAutor = mysqli_fetch_row($queryAutor);
 
 ?>
 <div class="center">
@@ -21,35 +27,36 @@ if(mysqli_num_rows($queryForum) > 0) {
         <div class="grid-postagem">
             <div class="img-postagem">
                 <div class="imagem-perfil center">
-                    <img src="./public/assets/imagem-teste.jpg" alt="imagem da empresa">
+                    <img src="<?= $infoAutor[1]?>" alt="imagem da empresa" width="100px" height="100px">
                 </div>
-                <p id="" class="nome-postagem"><?= $infoForum[1]?></p>
-                <p id="" class="status-postagem"><?= $infoForum[2]?></p>
+                <p id="" class="nome-postagem"><?= $infoAutor[0]?></p>
+                <p id="" class="status-postagem"><?= $infoForum[1]?></p>
             </div>
             <div class="commentario-postagem">
                 <div>
                     <p id= "" class="area-de-texto">
-                        <?= $infoForum[3]?> 
+                        <?= $infoForum[2]?> 
                     </p>
                 </div>
             </div>
             <div class="elementos-postagem">
                 <?php 
-                if($_SESSION['email'] == $infoForum[0]){
+                if($_SESSION['id'] == $infoForum[0] && $_SESSION['situacao'] == $infoForum[1]){
                 ?>
-                <button type="button" name="editar" onclick="">
+                <button type="submit" name="editar" value="<?= $infoForum[3]?>" class="link">
                     <i class="far fa-edit">Editar</i>
                 </button>
-                <?php if('adicionar situação no session' == 'admin' || $_SESSION['email'] == $infoForum[0]) { ?>
-                <button type="submit" name="excluir" value="<?= $infoForum[5]?>">
+                <?php if('adicionar situação no session' == 'admin' || ($_SESSION['id'] == $infoForum[0] && 
+                $_SESSION['situacao'] == $infoForum[1])) { ?>
+                <button type="submit" name="excluir" value="<?= $infoForum[4]?>" class="link">
                     <i class="far fa-trash-alt">Excluir</i>
                 </button>
                 <?php
                     }
                 }
                 ?>
-                <button type="submit">
-                    <i class="far fa-comment"><?= $infoForum[4] ?></i>
+                <button type="submit" class="link">
+                    <i class="far fa-comment"><?= $infoForum[3] ?></i>
                 </button>
             </div>
         </div>
