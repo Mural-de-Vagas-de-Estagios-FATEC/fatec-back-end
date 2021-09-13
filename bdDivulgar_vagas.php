@@ -1,16 +1,16 @@
 <?php
-$sqlVagas = "SELECT * FROM VAGAS";
+$sqlVagas = "SELECT * FROM vagas";
 $queryVagas = mysqli_query($mysqli,$sqlVagas); 
 
 if(mysqli_num_rows($queryVagas) > 0) {
-    $sqlId = "SELECT ID_VAGA FROM VAGAS WHERE AUTOR=" . $_SESSION['id'];
+    $sqlId = "SELECT ID_VAGA FROM vagas WHERE AUTOR=" . $_SESSION['id'];
     $queryId = mysqli_query($mysqli,$sqlId);
     $infoId = mysqli_fetch_all($queryId);
 
     $cnt = sizeof($infoId);
     $j = sizeof($infoId) - 1;
     for ($i=0; $i <= $j ; $j--) {
-        $sqlPubli = "SELECT * FROM VAGAS WHERE ID_VAGA=" . $infoId[$j][0];
+        $sqlPubli = "SELECT * FROM vagas WHERE ID_VAGA=" . $infoId[$j][0];
         $queryPubli = mysqli_query($mysqli,$sqlPubli);
         $infoVagas = mysqli_fetch_row($queryPubli);
 
@@ -18,12 +18,11 @@ if(mysqli_num_rows($queryVagas) > 0) {
 
 
 <div class="vagas empresa center">
-                        <!-- ARÉA PARA RECEBER VAGAS - INICIO TEMPLATE -->
                         <div class="container-vaga">
                             
                             <div class="dados-da-vaga">
                                 <div class="imagem-empresa">
-                                    <img src="./public/assets/imagem-teste.jpg" alt="imagem da empresa">
+                                    <img src="<?= $_SESSION['imagem'] ?>" alt="imagem da empresa" width="100px" height="100px">
                                 </div>
                                 <div class="informacao-vaga">
                                     <h3><?= $_SESSION['nome'] ?></h3>
