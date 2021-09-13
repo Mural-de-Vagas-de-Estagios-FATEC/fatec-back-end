@@ -2,44 +2,55 @@
 include('bd.php');
 session_start();
 if(isset($_SESSION['nome'])){//se estiver logado, encaminha para a tela de home
-	header("Location: home.php");
+    header("Location: home.php");
 }
 if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
-	//$RA = $_POST['nmbrRA'];//Campo do RA removido até o momento
-	$nome = $_POST['txtNome'];
-	$email = $_POST['txtEmail'];
-	$senha = password_hash($_POST['txtSenha'], PASSWORD_BCRYPT);
-	$curso = $_POST['cboCurso'];
-	$semestre = $_POST['cboSemestre'];
+    $nome = $_POST['txtNome'];
+    $email = $_POST['txtEmail'];
+    $senha = password_hash($_POST['txtSenha'], PASSWORD_BCRYPT);
+    $curso = $_POST['cboCurso'];
+    $semestre = $_POST['cboSemestre'];
+    if($_FILES['imagem']['size'] == 0){
+        $imagem = 'imagens/imagem-teste.jpg';
+    }
+    else {
+        $extensao = strtolower(substr($_FILES['imagem']['name'],-4));
+        $imagem = 'imagens/' . md5(time()) . $extensao;
+    }
+    
 
-	//$sqlRA = "SELECT * FROM usuários WHERE RA='$RA'";//RA removido até o momento
-	$sqlEmail = "SELECT * FROM usuários WHERE EMAIL='$email'";
-	$queryEmail = mysqli_query($mysqli,$sqlEmail);
-	/*$queryRA = mysqli_query($mysqli,$sqlRA);
-	if(mysqli_num_rows($queryRA)){//verifica se o RA já está em uso
-	   	echo 'RA Já registrado';   //Tirar esse campo caso não use mais RA
-	    }*/
-	if(mysqli_num_rows($queryEmail)){//verifica se o RA já está em uso
-	   	echo 'Email Já registrado';   
-	    }	    
-	//criar uma área para verificar a senha e para O Código
-	else{//se todos os campos forem preenchidos
-	    $sql_code = "INSERT INTO usuários (NOME, EMAIL, SENHA, CURSO, SEMESTRE) VALUES('$nome','$email', '$senha', '$curso', '$semestre')";//código SQL para inserir os dados
-		    
-	    if(mysqli_query($mysqli,$sql_code)){//se o banco de dados fizer o registro
-			//$_SESSION['RA'] = $RA;// RA removido até o momento
-	    	$_SESSION['nome'] = $nome;
-	    	$_SESSION['email'] = $email;
-	    	$_SESSION['curso'] = $curso;
-	    	$_SESSION['semestre'] = $semestre;
-			header("Location: home.php");//redireciona o usuário para a página principal
-	        exit();
-		}
-	    else {
-		    echo "Erro";
-		    die("Não foi registrar no banco de dados, tente novamente mais tarde");
-		}
-	}
+    //$sqlRA = "SELECT * FROM usuários WHERE RA='$RA'";//RA removido até o momento
+    $sqlEmail = "SELECT * FROM usuários WHERE EMAIL='$email'";
+    $queryEmail = mysqli_query($mysqli,$sqlEmail);
+    $sqlEmailEgresso = "SELECT * FROM egresso WHERE EMAIL='$email'";
+    $queryEmailEgresso = mysqli_query($mysqli,$sqlEmailEgresso);
+    $sqlEmailEmpresa = "SELECT * FROM empresa WHERE EMAIL='$email'";
+    $queryEmailEmpresa = mysqli_query($mysqli,$sqlEmailEmpresa);
+    if(mysqli_num_rows($queryEmail)){//verifica se o Email já está em uso
+        echo 'Email Já registrado';   
+        }
+    elseif(mysqli_num_rows($queryEmailEgresso)){//verifica se o Email já está em uso
+        echo 'Email Já registrado';   
+        }
+    elseif(mysqli_num_rows($queryEmailEmpresa)){//verifica se o Email já está em uso
+        echo 'Email Já registrado';   
+        }
+        
+    else{//se todos os campos forem preenchidos
+        $sql_code = "INSERT INTO usuários (NOME, EMAIL, SENHA, CURSO, SEMESTRE, IMAGEM) VALUES('$nome','$email', '$senha', '$curso', '$semestre', '$imagem')";//código SQL para inserir os dados
+            
+        if(mysqli_query($mysqli,$sql_code)){//se o banco de dados fizer o registro
+            if($imagem != 'imagens/imagem-teste.jpg'){
+                move_uploaded_file($_FILES['imagem']['tmp_name'], $imagem);
+            }
+            header("Location: index.php?login=sim");//redireciona o usuário para a página principal
+            exit();
+        }
+        else {
+            die("Não foi registrar no banco de dados, tente novamente mais tarde");
+        }
+    }
+
 }
 
 ?>
@@ -51,13 +62,22 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="public/css/cadastro_aluno.css">
+    <script>
+        var loadFile = function(event) {
+    var output = document.getElementById('imgPerfil');
+    output.src = URL.createObjectURL(event.target.files[0]);
+    output.onload = function() {
+      URL.revokeObjectURL(output.src)
+    }
+  };
+    </script>
     <title>Cadastro Aluno</title>
 </head>
 
 <body>
     <nav>
         <img src="public/assets/logo-fatec.png" alt="Logo Fatec de itaquaquecetuba" class="img_logo">
-        <a href="index.html">Home</a>
+        <a href="index.php">Home</a>
     </nav>
     <div class="conteudo">
         <div class="conteudo_titulo">
@@ -72,12 +92,11 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
                     <label for="txtNome">Nome</label>
                     <input class="input" type="text" name="txtNome" id="txtNome">
                 </div>
-
                 <div class="div2 cadastro_div">
-                    <input type="image" src="public/assets/perfil.png" alt="" id="imgPerfil">
-                    <input type="button" value="Escolher imagem" id="btnImagem">
+                    <input type="image" src="public/assets/perfil.png" width="105px" height="105px" alt="" id="imgPerfil">
+                    <input type="file" value="Escolher imagem" name="imagem" accept="image/png, image/jpeg" onchange="loadFile(event)" 
+                    id="btnImagem">
                 </div>
-
                 <div class="div3 cadastro_div">
                      <label for="txtEmail">Email</label>
                     <input  class="input"type="email" name="txtEmail" id="txtEmail">
@@ -86,6 +105,9 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
                     <label for="cboCurso">Curso</label>
                     <select id="cboCurso" name="cboCurso" class="cbo">
                         <option>GTI</option>
+                        <option>Secretariado</option>
+                        <option>Gestão Comercial</option>
+                        <option>Gestão Empresarial</option>
                     </select>
                 </div>
                 <div class="div5 cadastro_div">
@@ -95,7 +117,12 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
                  <div class="div6 cadastro_div">
                     <label for="cboSemestre">Semestre</label>
                     <select id="cboSemestre" name="cboSemestre" class="cbo">
+                        <option>1º Semestre</option>
+                        <option>2º Semestre</option>
+                        <option>3º Semestre</option>
+                        <option>4º Semestre</option>
                         <option>5º Semestre</option>
+                        <option>6º Semestre</option>
                     </select>
                 </div>
                 <div class="div7 cadastro_div">
