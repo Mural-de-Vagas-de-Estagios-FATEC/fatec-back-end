@@ -67,3 +67,25 @@ Excluir publicação - funcionando
   Imagens no site todo
   
   Todos os códigos foram atualizados para adequar ao novo cadastro e imagens
+
+  
+19/09
+  
+  
+  index foi adicionado login para administradores 
+
+  cadastros agora encaminham para o banco de dados de pendencias, as pesquisas nas 6 tabelas agora são feitas em um comando só, é brilante (mas dá um bug no site de testes);
+
+  cadastro admin ( página temporaria só para enviar o cadastro dos admin com uma senha segura no banco de dados)
+
+  forum, bdforum, e lado_esquerdo atualizados para aceitar o admin e as novas mudanças do banco de dados
+
+  inicio agora armazena a data das vagas publicadas pela empresa (** detalhe)
+
+  dicas_curriculo e estagio_obrigatorio, só mostra para os administradores as suas novas áreas, pendencias e divulgar vaga (isso foi adicionado em todos)
+
+  novas páginas para administradores, pendencia aluno, egresso e empresa, também divulgar vagas
+
+  home atualizado para receber vagas de empresas e administradores, (** agora elas vão ser ordenadas pela data de publicação, antes era pelo id(mas bugaria ao juntar as duas))
+
+
