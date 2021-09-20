@@ -20,27 +20,18 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
         $imagem = 'imagens/' . md5(time()) . $extensao;
     }
     
-
-    $sqlEmail = "SELECT * FROM usuários WHERE EMAIL='$email'";
+    $sqlEmail = "INSERT INTO PENDENTE_EMPRESA (NOME, EMAIL, CIDADE, SENHA, CNPJ, TELEFONE, CELULAR, IMAGEM)
+                SELECT '$nome', '$email', '$cidade', '$senha', '$cnpj', '$telefone', '$celular', '$imagem'
+                WHERE 
+                    NOT EXISTS ( SELECT EMAIL FROM PENDENTE_EMPRESA WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM PENDENTE_EGRESSO WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM PENDENTE_USUARIO WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM EMPRESA WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM EGRESSO WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM USUÁRIOS WHERE EMAIL = '$email' )";
     $queryEmail = mysqli_query($mysqli,$sqlEmail);
-    $sqlEmailEgresso = "SELECT * FROM egresso WHERE EMAIL='$email'";
-    $queryEmailEgresso = mysqli_query($mysqli,$sqlEmailEgresso);
-    $sqlEmailEmpresa = "SELECT * FROM empresa WHERE EMAIL='$email'";
-    $queryEmailEmpresa = mysqli_query($mysqli,$sqlEmailEmpresa);
-    if(mysqli_num_rows($queryEmail)){//verifica se o Email já está em uso
-        echo 'Email Já registrado';   
-        }
-    elseif(mysqli_num_rows($queryEmailEgresso)){//verifica se o Email já está em uso no banco de dados do egresso
-        echo 'Email Já registrado';   
-        }
-    elseif(mysqli_num_rows($queryEmailEmpresa)){//verifica se o Email já está em uso no banco de dados da empresa (vai saber)
-        echo 'Email Já registrado';   
-        }       
-    //criar uma área para verificar a senha e para O Código
-    else{//se todos os campos forem preenchidos
-        $sql_code = "INSERT INTO empresa (NOME, EMAIL, CIDADE, SENHA, CNPJ, TELEFONE, CELULAR, IMAGEM) VALUES ('$nome','$email', '$cidade', '$senha', '$cnpj', '$telefone', '$celular', '$imagem')";//código SQL para inserir os dados
-            
-        if(mysqli_query($mysqli,$sql_code)){//se o banco de dados fizer o registro
+      
+        if($queryEmail){//se o banco de dados fizer o registro
             if($imagem != 'imagens/imagem-teste.jpg'){
                 move_uploaded_file($_FILES['imagem']['tmp_name'], $imagem);
             }
@@ -51,8 +42,6 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
             die("Não foi possível registrar no banco de dados, tente novamente mais tarde");
         }
     }
-}
-
 ?>
 
 <!DOCTYPE html>
