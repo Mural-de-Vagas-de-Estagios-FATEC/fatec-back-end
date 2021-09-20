@@ -6,7 +6,6 @@ if(mysqli_num_rows($queryForum) > 0) {
     $sqlId = "SELECT ID_PUBLICACAO FROM FORUM ORDER BY ID_PUBLICACAO";
     $queryId = mysqli_query($mysqli,$sqlId);
     $infoId = mysqli_fetch_all($queryId);
-
     $j = sizeof($infoId) - 1;
     for ($i=0; $i <= $j; $j--) { 
         $sqlPubli = "SELECT * FROM FORUM WHERE ID_PUBLICACAO=" . $infoId[$j][0];
@@ -15,8 +14,11 @@ if(mysqli_num_rows($queryForum) > 0) {
         if($infoForum[1] == 'Aluno'){
             $sqlAutor = "SELECT NOME, IMAGEM FROM usuários LEFT JOIN FORUM ON FORUM.AUTOR = usuários.ID_USUARIO WHERE ID_PUBLICACAO=" . $infoId[$j][0];
         }
-        else {
-            $sqlAutor = "SELECT NOME, IMAGEM FROM egresso LEFT JOIN FORUM ON FORUM.AUTOR = egresso.ID_EGRESSO WHERE ID_PUBLICACAO=" . $infoId[$j][0];
+        elseif($infoForum[1] == 'Egresso') {
+            $sqlAutor = "SELECT NOME, IMAGEM FROM egresso LEFT JOIN forum ON forum.AUTOR = egresso.ID_EGRESSO WHERE ID_PUBLICACAO=" . $infoId[$j][0];
+        }
+        else{
+            $sqlAutor = "SELECT NOME, IMAGEM FROM admin LEFT JOIN forum ON forum.AUTOR = admin.ID_admin WHERE ID_PUBLICACAO=" . $infoId[$j][0];
         }
         $queryAutor = mysqli_query($mysqli,$sqlAutor);
         $infoAutor = mysqli_fetch_row($queryAutor);
@@ -46,13 +48,16 @@ if(mysqli_num_rows($queryForum) > 0) {
                 <button type="submit" name="editar" value="<?= $infoForum[3]?>" class="link">
                     <i class="far fa-edit">Editar</i>
                 </button>
-                <?php if('adicionar situação no session' == 'admin' || ($_SESSION['id'] == $infoForum[0] && 
+                <?php 
+                }
+                ?>
+                <?php if($_SESSION['situacao'] == 'Admin' || ($_SESSION['id'] == $infoForum[0] && 
                 $_SESSION['situacao'] == $infoForum[1])) { ?>
                 <button type="submit" name="excluir" value="<?= $infoForum[4]?>" class="link">
                     <i class="far fa-trash-alt">Excluir</i>
                 </button>
                 <?php
-                    }
+                
                 }
                 ?>
                 <button type="submit" class="link">
