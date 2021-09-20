@@ -7,68 +7,100 @@ if(isset($_SESSION['nome'])){//se estiver logado, encaminha para a tela de home
 if(isset($_POST['confirmar'])){//se o confirmar for pressionado
     $email = $_POST['login'];//cria uma variavel para o email tirando do form txtEmail
     $senha = $_POST['password'];
-    $sql = "SELECT * FROM usuários WHERE EMAIL='$email'";
-    $query = mysqli_query($mysqli,$sql);/*realiza o comando SQL, a variavel $mysqli
-    está no arquivo do banco de dados*/
-    $sqlEgresso = "SELECT * FROM egresso WHERE EMAIL='$email'";
-    $queryEgresso = mysqli_query($mysqli,$sqlEgresso);
-    $sqlEmpresa = "SELECT * FROM empresa WHERE EMAIL='$email'";
-    $queryEmpresa = mysqli_query($mysqli,$sqlEmpresa);
-    if(mysqli_num_rows($query)){//se tiver alguma linha com a pesquisa efetuada retorna verdadeiro
-        $infoUsuario = mysqli_fetch_row($query);
-        $senhaBD = $infoUsuario[2];
-        if(password_verify($senha, $senhaBD)){
-            $_SESSION['nome'] = $infoUsuario[0];
-            $_SESSION['email'] = $infoUsuario[1];
-            $_SESSION['curso'] = $infoUsuario[3];
-            $_SESSION['semestre'] = $infoUsuario[4];
-            $_SESSION['situacao'] = 'Aluno';
-            $_SESSION['imagem'] = $infoUsuario[5];
-            $_SESSION['id']= $infoUsuario[6];
-            header("Location: home.php");
-            exit(); 
+    if(true){
+        $sql = "SELECT * FROM admin WHERE EMAIL = '$email'";
+        $query = mysqli_query($mysqli,$sql);
+        if(mysqli_num_rows($query)){
+            $infoAdmin = mysqli_fetch_row($query);
+            $senhaBD = $infoAdmin[2];
+            if(password_verify($senha, $senhaBD)){
+                $_SESSION['nome'] = $infoAdmin[0];
+                $_SESSION['email'] = $infoAdmin[1];
+                $_SESSION['situacao'] = 'Admin';
+                $_SESSION['imagem'] = $infoAdmin[3];
+                $_SESSION['id'] = $infoAdmin[4];
+                header("Location: home.php");
+                exit();
             }
-        else {// se não tiver linha com a pesquisa retorna senha ou email incorreto
-            echo 'Senha Incorreta';
-        }
-
-    }
-    elseif (mysqli_num_rows($queryEgresso)){
-        $infoUsuario = mysqli_fetch_row($queryEgresso);
-        $senhaBD = $infoUsuario[2];
-        if(password_verify($senha, $senhaBD)){
-            $_SESSION['nome'] = $infoUsuario[0];
-            $_SESSION['email'] = $infoUsuario[1];
-            $_SESSION['curso'] = $infoUsuario[3];
-            $_SESSION['situacao'] = 'Egresso';
-            $_SESSION['imagem'] = $infoUsuario[5];
-            $_SESSION['id']= $infoUsuario[6];
-            header("Location: home.php");
-            exit(); 
+            else {
+                echo 'Senha Incorreta';
+                exit();
             }
-        else {// se não tiver linha com a pesquisa retorna senha ou email incorreto
-            echo 'Senha Incorreta';
         }
     }
-    elseif (mysqli_num_rows($queryEmpresa)){
-        $infoEmpresa = mysqli_fetch_row($queryEmpresa);
-        $senhaBD = $infoEmpresa[3];
-        if(password_verify($senha, $senhaBD)){
-            $_SESSION['nome'] = $infoEmpresa[0];
-            $_SESSION['email'] = $infoEmpresa[1];
-            $_SESSION['cidade'] = $infoEmpresa[2];
-            $_SESSION['cnpj'] = $infoEmpresa[4];
-            $_SESSION['telefone'] = $infoEmpresa[5];
-            $_SESSION['celular'] = $infoEmpresa[6];
-            $_SESSION['imagem'] = $infoEmpresa[7];
-            $_SESSION['id'] = $infoEmpresa[8];
-            $_SESSION['situacao'] = "Empresa";
-            header("Location: inicio.php");
-            exit();
+    if(true){//executa primeiro a busca dos alunos (evitar lentidão rodando 3 querys antes de procurar)
+        $sql = "SELECT * FROM usuários WHERE EMAIL='$email'";
+        $query = mysqli_query($mysqli,$sql);/*realiza o comando SQL, a variavel $mysqli
+        está no arquivo do banco de dados*/
+        if(mysqli_num_rows($query)){//se tiver alguma linha com a pesquisa efetuada retorna verdadeiro
+            $infoUsuario = mysqli_fetch_row($query);
+            $senhaBD = $infoUsuario[2];
+            if(password_verify($senha, $senhaBD)){
+                $_SESSION['nome'] = $infoUsuario[0];
+                $_SESSION['email'] = $infoUsuario[1];
+                $_SESSION['curso'] = $infoUsuario[3];
+                $_SESSION['semestre'] = $infoUsuario[4];
+                $_SESSION['situacao'] = 'Aluno';
+                $_SESSION['imagem'] = $infoUsuario[5];
+                $_SESSION['id']= $infoUsuario[6];
+                header("Location: home.php");
+                exit(); 
+                }
+            else {// se não tiver linha com a pesquisa retorna senha ou email incorreto
+                echo 'Senha Incorreta';
+                exit();
+            }
+        }
+    }
+    if(true){
+        $sqlEgresso = "SELECT * FROM egresso WHERE EMAIL='$email'";
+        $queryEgresso = mysqli_query($mysqli,$sqlEgresso);
+        if (mysqli_num_rows($queryEgresso)){
+            $infoUsuario = mysqli_fetch_row($queryEgresso);
+            $senhaBD = $infoUsuario[2];
+            if(password_verify($senha, $senhaBD)){
+                $_SESSION['nome'] = $infoUsuario[0];
+                $_SESSION['email'] = $infoUsuario[1];
+                $_SESSION['curso'] = $infoUsuario[3];
+                $_SESSION['situacao'] = 'Egresso';
+                $_SESSION['imagem'] = $infoUsuario[5];
+                $_SESSION['id']= $infoUsuario[6];
+                header("Location: home.php");
+                exit(); 
+                }
+            else {// se não tiver linha com a pesquisa retorna senha ou email incorreto
+                echo 'Senha Incorreta';
+                exit();
+            }
+        }
+    }
+    if(true){
+        $sqlEmpresa = "SELECT * FROM empresa WHERE EMAIL='$email'";
+        $queryEmpresa = mysqli_query($mysqli,$sqlEmpresa);
+        if (mysqli_num_rows($queryEmpresa)){
+            $infoEmpresa = mysqli_fetch_row($queryEmpresa);
+            $senhaBD = $infoEmpresa[3];
+            if(password_verify($senha, $senhaBD)){
+                $_SESSION['nome'] = $infoEmpresa[0];
+                $_SESSION['email'] = $infoEmpresa[1];
+                $_SESSION['cidade'] = $infoEmpresa[2];
+                $_SESSION['cnpj'] = $infoEmpresa[4];
+                $_SESSION['telefone'] = $infoEmpresa[5];
+                $_SESSION['celular'] = $infoEmpresa[6];
+                $_SESSION['imagem'] = $infoEmpresa[7];
+                $_SESSION['id'] = $infoEmpresa[8];
+                $_SESSION['situacao'] = "Empresa";
+                header("Location: inicio.php");
+                exit();
+            }
+            else {
+                echo 'Senha Incorreta';
+                exit();
+            }
         }
     }
     else {
-        echo 'Email Incorreto';
+         echo 'Email não registrado ou em espera de avaliação!';
     }
     
 }
