@@ -10,7 +10,7 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
     $senha = password_hash($_POST['txtSenha'], PASSWORD_BCRYPT);
     $confirmarSenha = password_hash($_POST['txtConfirmaSenha'], PASSWORD_BCRYPT);
     $curso = $_POST['cboCurso'];
-    $cpf = $_POST['txtCpf'];
+    $nomeMae = $_POST['txtnomeMae'];
     if($_FILES['imagem']['size'] == 0){
         $imagem = 'imagens/imagem-teste.jpg';
     }
@@ -19,26 +19,18 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
         $imagem = 'imagens/' . md5(time()) . $extensao;
     }
 
-    $sqlEmail = "SELECT * FROM usuários WHERE EMAIL='$email'";
+    $sqlEmail = "INSERT INTO PENDENTE_EGRESSO (NOME, EMAIL, SENHA, CURSO, NOME_MAE, IMAGEM)
+                SELECT '$nome', '$email', '$senha', '$curso', '$nomeMae', '$imagem'
+                WHERE 
+                    NOT EXISTS ( SELECT EMAIL FROM PENDENTE_EMPRESA WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM PENDENTE_EGRESSO WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM PENDENTE_USUARIO WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM EMPRESA WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM EGRESSO WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM USUÁRIOS WHERE EMAIL = '$email' )";
     $queryEmail = mysqli_query($mysqli,$sqlEmail);
-    $sqlEmailEgresso = "SELECT * FROM egresso WHERE EMAIL='$email'";
-    $queryEmailEgresso = mysqli_query($mysqli,$sqlEmailEgresso);
-    $sqlEmailEmpresa = "SELECT * FROM empresa WHERE EMAIL='$email'";
-    $queryEmailEmpresa = mysqli_query($mysqli,$sqlEmailEmpresa);
-    if(mysqli_num_rows($queryEmail)){//verifica se o Email já está em uso
-        echo 'Email Já registrado';   
-        }
-    elseif(mysqli_num_rows($queryEmailEgresso)){//verifica se o Email já está em uso no banco de dados do egresso
-        echo 'Email Já registrado';   
-        }
-    elseif(mysqli_num_rows($queryEmailEmpresa)){//verifica se o Email já está em uso no banco de dados da empresa (pois é)
-        echo 'Email Já registrado';   
-        }       
-    //criar uma área para verificar a senha e para O Código
-    else{//se todos os campos forem preenchidos
-        $sql_code = "INSERT INTO egresso (NOME, EMAIL, SENHA, CURSO, CPF, IMAGEM) VALUES('$nome','$email', '$senha', '$curso', '$cpf', '$imagem')";//código SQL para inserir os dados
             
-        if(mysqli_query($mysqli,$sql_code)){//se o banco de dados fizer o registro
+        if($queryEmail){//se o banco de dados fizer o registro
             if($imagem != 'imagens/imagem-teste.jpg'){
                 move_uploaded_file($_FILES['imagem']['tmp_name'], $imagem);
             }
@@ -49,7 +41,7 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
             echo "Erro";
             die("Não foi registrar no banco de dados, tente novamente mais tarde");
         }
-    }
+    
 }
 
 ?>
@@ -124,8 +116,8 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
 
 
             <div class="div6 cadastro_div">
-                <label for="txtCpf">CPF</label>
-                <input type="text" name="txtCpf" id="txtCpf" class="input">
+                <label for="txtnomeMae">Nome da Mãe</label>
+                <input type="text" name="txtnomeMae" id="txtnomeMae" class="input">
             </div>
 
         </div>
