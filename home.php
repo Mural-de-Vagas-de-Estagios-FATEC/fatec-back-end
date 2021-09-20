@@ -4,7 +4,12 @@ require_once("verificar_login.php");
 if($_SESSION['situacao'] == 'Empresa'){
     header("Location: inicio.php");
 }
-
+if(isset($_POST['excluir'])){
+    $idExcluir = $_POST['excluir'];
+    $sqlExcluir = "DELETE FROM VAGAS WHERE ID_VAGA=$idExcluir";
+    $queryExcluir = mysqli_query($mysqli,$sqlExcluir);
+    header("home.php");
+}
 ?>
 
 <!DOCTYPE html>
@@ -19,6 +24,15 @@ if($_SESSION['situacao'] == 'Empresa'){
     <link rel="stylesheet" href="./public/css/global.css">
     <link rel="stylesheet" href="./public/css/vagas.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;900&family=Sen:wght@700&display=swap" rel="stylesheet">
+    <style type="text/css">
+        .link {
+            background: none;
+            border: none;
+            padding: 0;
+            padding-left: 10px;
+            font-size: 15px;
+            }
+    </style>
     <title>Área de Vagas</title>
 </head>
 
@@ -57,6 +71,28 @@ if($_SESSION['situacao'] == 'Empresa'){
                                 </ul>
                             </div>
                         </li>
+                        <?php if($_SESSION['situacao'] == 'Admin'){?>
+                            <li class="nav-link" style="--i: 1.1s">
+                                <a href="#">PENDENTES<i class="fas fa-caret-down"></i></a>
+                                <div class="dropdown">
+                                    <ul>
+                                        <li class="dropdown-link">
+                                            <a href="alunos-admin.php">Alunos</a>
+                                        </li>
+                                        <li class="dropdown-link">
+                                            <a href="egressos-admin.php">Egressos</a>
+                                        </li>
+                                        <li class="dropdown-link">
+                                            <a href="empresas-admin.php" class="last">Empresas</a>
+                                        </li>
+                                        <div class="arrow"></div>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-link" style="--i: 1.35s">
+                                <a href="admin.php">DIVULGAR VAGA</a>
+                            </li>
+                        <?php }?>
                         <li class="nav-link" style="--i: 1.35s">
                             <a href="sair.php" id="exit">SAIR</a>
                         </li>
