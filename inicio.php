@@ -15,7 +15,13 @@ if(mysqli_num_rows($queryVagas) > 0) {
 
     $cnt = sizeof($infoId);
 }
-
+if(isset($_POST['excluir'])){
+    $idExcluir = $_POST['excluir'];
+    $sqlExcluir = "DELETE FROM VAGAS WHERE ID_VAGA=$idExcluir";
+    $queryExcluir = mysqli_query($mysqli,$sqlExcluir);
+    $cnt--;
+    header("inicio.php");
+}
 if(isset($_POST['publicar'])){
     $id = $_SESSION['id'];
     $nomeVaga = $_POST['nomeVaga'];
@@ -23,8 +29,8 @@ if(isset($_POST['publicar'])){
     $curso = $_POST['curso'];
     $qntd = $_POST['qntd'];
     $perfil = $_POST['perfil'];
-    $sqlPublicar = "INSERT INTO vagas (AUTOR, NOME_VAGA, REGIME, CURSO, QUANTIDADE, PERFIL) VALUES ('$id', '$nomeVaga',
-    '$regime', '$curso', '$qntd', '$perfil')";
+    $data = date('YmdHi');
+    $sqlPublicar = "INSERT INTO vagas (AUTOR, NOME_VAGA, REGIME, CURSO, QUANTIDADE, PERFIL, DATA) VALUES ('$id', '$nomeVaga', '$regime', '$curso', '$qntd', '$perfil', '$data')";
 
     if(mysqli_query($mysqli,$sqlPublicar)){
         header('Location: inicio.php');
@@ -49,6 +55,15 @@ if(isset($_POST['publicar'])){
     <link rel="stylesheet" href="./public/css/grid.css">
     <link rel="stylesheet" href="./public/css/vagas.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;900&family=Sen:wght@400;700&display=swap" rel="stylesheet">
+    <style type="text/css">
+        .link {
+            background: none;
+            border: none;
+            padding: 0;
+            padding-left: 10px;
+            font-size: 15px;
+            }
+    </style>
     <title>Divulgar Vagas</title>
 </head>
 
@@ -167,6 +182,7 @@ if(isset($_POST['publicar'])){
 
                         
                     </div>
+                    <form method="post" id="formExcluir"></form>
                     <?php 
                     include_once("bdDivulgar_vagas.php");
                     ?>
