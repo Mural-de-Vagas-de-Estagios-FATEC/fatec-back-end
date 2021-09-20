@@ -18,8 +18,21 @@
                         <div class="dados">
                             <p>Nome: <?= $_SESSION['nome']; ?></p>   
                             <p>E-mail: <?= $_SESSION['email']; ?></p>
-                            <hr>
+                            <?php 
+                            if(isset($_SESSION['curso'])){
+                                echo '<hr>';
+                            ?>
                             <p>Curso: <?= $_SESSION['curso']; ?></p>
+                            <?php
+                            }?>
+                            <?php 
+                            if(isset($_SESSION['semestre'])){
+                                echo '<hr>';
+                            ?>
+                            <p>Curso: <?= $_SESSION['semestre']; ?></p>
+                            <?php
+                            }?>
+
                             <hr>
                             <p>Situação: <?= $_SESSION['situacao']?></p>
                         </div>
