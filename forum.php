@@ -21,7 +21,7 @@ if(isset($_POST['enviar'])){
         exit();
     }
     else {
-        //die("Erro no envio da publicação");
+        die("Erro no envio da publicação");
     }
 
 }
@@ -63,7 +63,51 @@ if(isset($_POST['enviar'])){
             <div class="nav-btn">
                 <div class="nav-links">
                     <ul>
-                        
+                        <li class="nav-link" style="--i: .6s">
+                            <a href="home.php">VAGAS</a>
+                        </li>
+                        <li class="nav-link" style="--i: 1.35s">
+                            <a href="#">FORUM</a>
+                        </li>
+                        <li class="nav-link" style="--i: 1.1s">
+                            <a href="#">REGULAMENTO<i class="fas fa-caret-down"></i></a>
+                            <div class="dropdown">
+                                <ul>
+                                    <li class="dropdown-link">
+                                        <a href="estagio_obrigatorio.php">Estágio Obrigatório</a>
+                                    </li>
+                                    <li class="dropdown-link">
+                                        <a href="dicas_de_curriculo.php">Dicas de Currículo</a>
+                                    </li>
+                                    <li class="dropdown-link">
+                                        <a href="#" class="last">Carta de equivalencia</a>
+                                    </li>
+                                    <div class="arrow"></div>
+                                </ul>
+                            </div>
+                        </li>
+                        <?php if($_SESSION['situacao'] == 'Admin'){?>
+                            <li class="nav-link" style="--i: 1.1s">
+                                <a href="#">PENDENTES<i class="fas fa-caret-down"></i></a>
+                                <div class="dropdown">
+                                    <ul>
+                                        <li class="dropdown-link">
+                                            <a href="alunos-admin.php">Alunos</a>
+                                        </li>
+                                        <li class="dropdown-link">
+                                            <a href="egressos-admin.php">Egressos</a>
+                                        </li>
+                                        <li class="dropdown-link">
+                                            <a href="empresas-admin.php" class="last">Empresas</a>
+                                        </li>
+                                        <div class="arrow"></div>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-link" style="--i: 1.35s">
+                                <a href="admin.php">DIVULGAR VAGA</a>
+                            </li>
+                        <?php }?>
                         <li class="nav-link" style="--i: 1.35s">
                             <a href="sair.php" id="exit">SAIR</a>
                         </li>
