@@ -39,7 +39,7 @@ if(mysqli_num_rows($queryVagas) > 0) {
                             <div class="info-adicionais-sobre-vaga center">
                                 <div>
                                     <i class="fas fa-briefcase"></i>
-                                    <?= $infoVagas[4] ?>
+                                    <?= $infoVagas[4] . " Vaga(s)" ?> / <?= $infoVagas[3] ?>
                                 </div>
                                 <div>
                                     <i class="fas fa-map-marker-alt"></i>
@@ -49,7 +49,11 @@ if(mysqli_num_rows($queryVagas) > 0) {
                                     <i class="far fa-clock"></i>
                                     <?= $infoVagas[2] ?>
                                 </div>
+                                <button type="submit" form="formExcluir" name="excluir" value="<?= $infoVagas[6]?>" class="link">
+                                    <i class="far fa-trash-alt">Excluir</i>
+                                </button>
                             </div>
+                                
                         </div>
                         
 </div>
