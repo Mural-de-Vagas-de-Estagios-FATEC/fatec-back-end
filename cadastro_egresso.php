@@ -77,7 +77,7 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
             <div class="marcador_vermelho">
 
             </div>
-            <h1>Cadastro Ex-Aluno</h1>
+            <h1>Cadastro Egresso</h1>
         </div>
         <form action="cadastro_egresso.php" id="formEgresso" method="Post" enctype="multipart/form-data">
         <div class="conteudo_cadastro">
