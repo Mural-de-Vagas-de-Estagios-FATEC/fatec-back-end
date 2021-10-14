@@ -36,7 +36,7 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
             if($imagem != 'imagens/imagem-teste.jpg'){
                 move_uploaded_file($_FILES['imagem']['tmp_name'], $imagem);
             }
-            header("Location: index.php?login=sim");//redireciona o usuário para a página principal
+            header("Location: cadastrado.php");//redireciona o usuário para a página principal
             exit();
         }
         else {
@@ -64,6 +64,10 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
     }
   };
     </script>
+    <link rel="stylesheet" href="./public/css/arq_de_mudancas.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="public/js/cadastro-aluno.js"></script>
+    
     <title>Cadastro Aluno</title>
 </head>
 
@@ -79,16 +83,19 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
             </div>
             <h1>Cadastro Aluno</h1>
         </div>
-        <form action="cadastro_aluno.php" method="Post" enctype="multipart/form-data">
+        <form action="cadastro_aluno.php" id="formAluno" method="Post" enctype="multipart/form-data">
             <div class="conteudo_cadastro">
                 <div class="div1 cadastro_div" >
                     <label for="txtNome">Nome</label>
                     <input class="input" type="text" name="txtNome" id="txtNome">
                 </div>
                 <div class="div2 cadastro_div">
-                    <input type="image" src="public/assets/perfil.png" width="105px" height="105px" alt="" id="imgPerfil">
-                    <input type="file" value="Escolher imagem" name="imagem" accept="image/png, image/jpeg" onchange="loadFile(event)" 
+                <input type="image" src="public/assets/perfil.png" width="105px" height="105px" alt="" id="imgPerfil">
+                <label class="input-upload center">
+                    <input type="file"  name="imagem" accept="image/png, image/jpeg" onchange="loadFile(event)" 
                     id="btnImagem">
+                    ESCOLHER IMAGEM
+                </label>
                 </div>
                 <div class="div3 cadastro_div">
                      <label for="txtEmail">Email</label>
@@ -130,10 +137,17 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
                 </div>
 
             </div>
-            <div class="conteudo_botao">
-                <input type="submit" name="subCadastrar" value="Cadastrar" class="btn_cadastro">
+            <div class="center">
+                <div class="termos-e-privacidade">
+                    <input type="checkbox" name="" id="politicas">
+                    <label for="politicas">
+                    Eu li e concordo com os <a href="#politica-de-privacidade">Termos de Uso e Política de Privacidade</a>.
+                </div>
             </div>
         </form>
+        <div class="conteudo_botao">
+            <input type="submit" name="subCadastrar" form="formAluno" value="Cadastrar" class="btn_cadastro">
+        </div>
 
     </div>
 
@@ -148,6 +162,14 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
 
         </div>
     </footer>
+    <div class="modal" id="politica-de-privacidade">
+        <div>
+          <a href="#" class="close">x</a>
+          <div id="texto-politica"></div>
+        </div>
+    </div>
+    <script src="./public/js/politica.js"></script>
+    <script src="./public/js/mascara_alunos.js"></script>
 </body>
 
 </html>
