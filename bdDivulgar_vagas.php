@@ -49,7 +49,7 @@ if(mysqli_num_rows($queryVagas) > 0) {
                                     <i class="far fa-clock"></i>
                                     <?= $infoVagas[2] ?>
                                 </div>
-                                <button type="submit" form="formExcluir" name="excluir" value="<?= $infoVagas[6]?>" class="link">
+                                <button type="submit" form="formExcluir" name="excluir" value="<?= $infoVagas[8]?>" class="link">
                                     <i class="far fa-trash-alt">Excluir</i>
                                 </button>
                             </div>
