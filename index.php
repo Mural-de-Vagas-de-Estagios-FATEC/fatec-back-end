@@ -63,8 +63,8 @@ if(isset($_POST['confirmar'])){//se o confirmar for pressionado
                 $_SESSION['email'] = $infoUsuario[1];
                 $_SESSION['curso'] = $infoUsuario[3];
                 $_SESSION['situacao'] = 'Egresso';
-                $_SESSION['imagem'] = $infoUsuario[5];
-                $_SESSION['id']= $infoUsuario[6];
+                $_SESSION['imagem'] = $infoUsuario[4];
+                $_SESSION['id']= $infoUsuario[5];
                 header("Location: home.php");
                 exit(); 
                 }
