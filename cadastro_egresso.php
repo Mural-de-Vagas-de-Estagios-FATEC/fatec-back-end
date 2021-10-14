@@ -34,7 +34,7 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
             if($imagem != 'imagens/imagem-teste.jpg'){
                 move_uploaded_file($_FILES['imagem']['tmp_name'], $imagem);
             }
-            header("Location: index.php");//redireciona o usuário para a página principal
+            header("Location: cadastrado.php");//redireciona o usuário para a página principal
             exit();
         }
         else {
@@ -64,6 +64,8 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
     }
   };
     </script>
+    <link rel="stylesheet" href="./public/css/arq_de_mudancas.css">
+
     <title>Cadastro Egresso</title>
 </head>
 
@@ -88,8 +90,11 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
 
             <div class="div2 cadastro_div">
                 <input type="image" src="public/assets/perfil.png" width="105px" height="105px" alt="" id="imgPerfil">
-                    <input type="file" value="Escolher imagem" name="imagem" accept="image/png, image/jpeg" onchange="loadFile(event)" 
+                <label class="input-upload center">
+                    <input type="file"  name="imagem" accept="image/png, image/jpeg" onchange="loadFile(event)" 
                     id="btnImagem">
+                    ESCOLHER IMAGEM
+                </label>
             </div>
 
             <div class="div3 cadastro_div">
@@ -116,14 +121,22 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
 
 
             <div class="div6 cadastro_div">
-                <label for="txtnomeMae">Nome da Mãe</label>
-                <input type="text" name="txtnomeMae" id="txtnomeMae" class="input">
+                <label for="txtCpf">CPF</label>
+                <input type="text" name="txtCpf" id="txtCpf" class="input">
             </div>
 
         </div>
+        <div class="center">
+        <div class="termos-e-privacidade">
+            <input type="checkbox" name="" id="politicas">
+            <label for="politicas">
+                Eu li e concordo com os <a href="#politica-de-privacidade">Termos de Uso e Política de Privacidade</a>.
+        </div>
+    </div>
         </form>
 
     </div>
+    
     <div class="conteudo_botao">
         <input type="submit" name="subCadastrar" form="formEgresso" class="btn_cadastro" value = "Cadastrar" >
     </div>
@@ -140,6 +153,14 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
 
         </div>
     </footer>
+    <div class="modal" id="politica-de-privacidade">
+        <div>
+          <a href="#" class="close">x</a>
+          <div id="texto-politica"></div>
+        </div>
+    </div>
+    <script src="./public/js/politica.js"></script>
+    <script src="./public/js/mascara_egresso.js"></script>
 </body>
 
 </html>
