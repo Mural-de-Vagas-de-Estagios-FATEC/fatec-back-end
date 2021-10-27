@@ -323,7 +323,7 @@ if(isset($_POST['postComentar'])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
-    <script src="lado_esquerdo.js"></script>
+    <script src="public/js/lado_esquerdo.js"></script>
     <script src="public/js/forum-botoes.js"></script>
     <link rel="stylesheet" href="./public/css/menu.css">
     <link rel="stylesheet" href="./public/css/global.css">
