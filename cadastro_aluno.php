@@ -28,8 +28,7 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
                     NOT EXISTS ( SELECT EMAIL FROM pendente_egresso WHERE EMAIL = '$email' ) AND
                     NOT EXISTS ( SELECT EMAIL FROM pendente_usuario WHERE EMAIL = '$email' ) AND
                     NOT EXISTS ( SELECT EMAIL FROM empresa WHERE EMAIL = '$email' ) AND
-                    NOT EXISTS ( SELECT EMAIL FROM egresso WHERE EMAIL = '$email' ) AND
-                    NOT EXISTS ( SELECT EMAIL FROM usuários WHERE EMAIL = '$email' ) LIMIT 1";
+                    NOT EXISTS ( SELECT EMAIL FROM usuarios WHERE EMAIL = '$email' ) LIMIT 1";
     $queryEmail = mysqli_query($mysqli,$sqlEmail);
 
         if($queryEmail){//se o banco de dados fizer o registro
