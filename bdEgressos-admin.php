@@ -1,9 +1,9 @@
 <?php
-$sql = 'SELECT * FROM PENDENTE_EGRESSO';
+$sql = 'SELECT * FROM pendente_egresso';
 $querySql = mysqli_query($mysqli,$sql);
 
 if(mysqli_num_rows($querySql) > 0){
-    $sqlId = "SELECT ID_PEND_EGRESSO FROM PENDENTE_EGRESSO ORDER BY ID_PEND_EGRESSO DESC";
+    $sqlId = "SELECT ID_PEND_EGRESSO FROM pendente_egresso ORDER BY ID_PEND_EGRESSO DESC";
     $queryId = mysqli_query($mysqli,$sqlId);
     $infoId = mysqli_fetch_all($queryId);
 
@@ -14,7 +14,6 @@ if(mysqli_num_rows($querySql) > 0){
                     <table>
                         <tr>
                             <th>Nome do Egresso</th>
-                            <th>Nome da Mãe</th>
                             <th>CPF</th>
                             <th>Curso</th>
                             <th>Situação</th>
@@ -22,7 +21,7 @@ if(mysqli_num_rows($querySql) > 0){
                         </tr>
             <?php
     for ($i=0; $i <= $j ; $j--) {
-        $sqlUser = "SELECT * FROM PENDENTE_EGRESSO WHERE ID_PEND_EGRESSO=" . $infoId[$j][0];
+        $sqlUser = "SELECT * FROM pendente_egresso WHERE ID_PEND_EGRESSO=" . $infoId[$j][0];
         $queryUser = mysqli_query($mysqli,$sqlUser);
         $infoPendente = mysqli_fetch_row($queryUser);
 
@@ -30,7 +29,6 @@ if(mysqli_num_rows($querySql) > 0){
 <tr>
     <td><?=$infoPendente[0]?></td>
     <td><?=$infoPendente[4]?></td>
-    <td>00000000000</td>
     <td><?=$infoPendente[3]?></td>
     <td>Pendente</td>
     <td class="botoes-vagas">
