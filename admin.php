@@ -147,10 +147,7 @@ if(isset($_POST['editar'])){
                                         <a href="estagio_obrigatorio.php">Estágio Obrigatório</a>
                                     </li>
                                     <li class="dropdown-link">
-                                        <a href="dicas_de_curriculo.php">Dicas de Currículo</a>
-                                    </li>
-                                    <li class="dropdown-link">
-                                        <a href="#" class="last">Carta de equivalencia</a>
+                                        <a href="dicas_de_curriculo.php" class="last">Dicas de Currículo</a>
                                     </li>
                                     <div class="arrow"></div>
                                 </ul>
