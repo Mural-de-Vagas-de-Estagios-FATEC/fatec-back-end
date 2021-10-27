@@ -10,7 +10,7 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
     $senha = password_hash($_POST['txtSenha'], PASSWORD_BCRYPT);
     $confirmarSenha = password_hash($_POST['txtConfirmaSenha'], PASSWORD_BCRYPT);
     $curso = $_POST['cboCurso'];
-    $nomeMae = $_POST['txtnomeMae'];
+    $cpf = $_POST['txtCpf'];
     if($_FILES['imagem']['size'] == 0){
         $imagem = 'imagens/imagem-teste.jpg';
     }
@@ -19,26 +19,24 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
         $imagem = 'imagens/' . md5(time()) . $extensao;
     }
 
-    $sqlEmail = "INSERT INTO PENDENTE_EGRESSO (NOME, EMAIL, SENHA, CURSO, NOME_MAE, IMAGEM)
-                SELECT '$nome', '$email', '$senha', '$curso', '$nomeMae', '$imagem'
+    $sqlEmail = "INSERT INTO pendente_egresso (NOME, EMAIL, SENHA, CURSO, CPF, IMAGEM)
+                SELECT '$nome', '$email', '$senha', '$curso', '$cpf', '$imagem'
                 WHERE 
-                    NOT EXISTS ( SELECT EMAIL FROM PENDENTE_EMPRESA WHERE EMAIL = '$email' ) AND
-                    NOT EXISTS ( SELECT EMAIL FROM PENDENTE_EGRESSO WHERE EMAIL = '$email' ) AND
-                    NOT EXISTS ( SELECT EMAIL FROM PENDENTE_USUARIO WHERE EMAIL = '$email' ) AND
-                    NOT EXISTS ( SELECT EMAIL FROM EMPRESA WHERE EMAIL = '$email' ) AND
-                    NOT EXISTS ( SELECT EMAIL FROM EGRESSO WHERE EMAIL = '$email' ) AND
-                    NOT EXISTS ( SELECT EMAIL FROM USUÁRIOS WHERE EMAIL = '$email' )";
+                    NOT EXISTS ( SELECT EMAIL FROM pendente_empresa WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM pendente_egresso WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM pendente_usuario WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM empresa WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM usuarios WHERE EMAIL = '$email' )";
     $queryEmail = mysqli_query($mysqli,$sqlEmail);
             
         if($queryEmail){//se o banco de dados fizer o registro
-            if($imagem != 'imagens/imagem-teste.jpg'){
+            if($imagem != 'imagens/imagem-teste.jpg'){//se não for a imagem padrão move a nova imagem para uma pasta
                 move_uploaded_file($_FILES['imagem']['tmp_name'], $imagem);
             }
             header("Location: cadastrado.php");//redireciona o usuário para a página principal
             exit();
         }
         else {
-            echo "Erro";
             die("Não foi registrar no banco de dados, tente novamente mais tarde");
         }
     
