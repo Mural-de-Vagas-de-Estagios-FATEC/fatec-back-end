@@ -44,10 +44,7 @@ if($_SESSION['situacao'] == 'Empresa'){
                                         <a href="#">Estágio Obrigatório</a>
                                     </li>
                                     <li class="dropdown-link">
-                                        <a href="dicas_de_curriculo.php">Dicas de Currículo</a>
-                                    </li>
-                                    <li class="dropdown-link">
-                                        <a href="#" class="last">Carta de equivalencia</a>
+                                        <a href="dicas_de_curriculo.php" class="last">Dicas de Currículo</a>
                                     </li>
                                     <div class="arrow"></div>
                                 </ul>
@@ -106,7 +103,7 @@ if($_SESSION['situacao'] == 'Empresa'){
                         <p><br><span class="texto-estagio"> Estágio obrigatório </span> é aquele definido como tal no projeto
                             do curso, cuja carga horária é requisito para aprovação e obtenção de diploma.</p>
                         <div class="link-download">
-                            <a href="#">Faça o download dos documentos do estágio</a>
+                            <a href="Documentos_de_Estágio.zip">Faça o download dos documentos do estágio</a>
                         </div>
                     </div>
                 </div>

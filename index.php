@@ -29,7 +29,7 @@ if(isset($_POST['confirmar'])){//se o confirmar for pressionado
         }
     }
     if(true){//executa primeiro a busca dos alunos (evitar lentidão rodando 3 querys antes de procurar)
-        $sql = "SELECT * FROM usuários WHERE EMAIL='$email'";
+        $sql = "SELECT * FROM usuarios WHERE EMAIL='$email'";
         $query = mysqli_query($mysqli,$sql);/*realiza o comando SQL, a variavel $mysqli
         está no arquivo do banco de dados*/
         if(mysqli_num_rows($query)){//se tiver alguma linha com a pesquisa efetuada retorna verdadeiro
@@ -40,31 +40,9 @@ if(isset($_POST['confirmar'])){//se o confirmar for pressionado
                 $_SESSION['email'] = $infoUsuario[1];
                 $_SESSION['curso'] = $infoUsuario[3];
                 $_SESSION['semestre'] = $infoUsuario[4];
-                $_SESSION['situacao'] = 'Aluno';
-                $_SESSION['imagem'] = $infoUsuario[5];
-                $_SESSION['id']= $infoUsuario[6];
-                header("Location: home.php");
-                exit(); 
-                }
-            else {// se não tiver linha com a pesquisa retorna senha ou email incorreto
-                echo 'Senha Incorreta';
-                exit();
-            }
-        }
-    }
-    if(true){
-        $sqlEgresso = "SELECT * FROM egresso WHERE EMAIL='$email'";
-        $queryEgresso = mysqli_query($mysqli,$sqlEgresso);
-        if (mysqli_num_rows($queryEgresso)){
-            $infoUsuario = mysqli_fetch_row($queryEgresso);
-            $senhaBD = $infoUsuario[2];
-            if(password_verify($senha, $senhaBD)){
-                $_SESSION['nome'] = $infoUsuario[0];
-                $_SESSION['email'] = $infoUsuario[1];
-                $_SESSION['curso'] = $infoUsuario[3];
-                $_SESSION['situacao'] = 'Egresso';
-                $_SESSION['imagem'] = $infoUsuario[5];
-                $_SESSION['id']= $infoUsuario[6];
+                $_SESSION['situacao'] = $infoUsuario[5];
+                $_SESSION['imagem'] = $infoUsuario[6];
+                $_SESSION['id']= $infoUsuario[7];
                 header("Location: home.php");
                 exit(); 
                 }
@@ -81,6 +59,7 @@ if(isset($_POST['confirmar'])){//se o confirmar for pressionado
             $infoEmpresa = mysqli_fetch_row($queryEmpresa);
             $senhaBD = $infoEmpresa[3];
             if(password_verify($senha, $senhaBD)){
+
                 $_SESSION['nome'] = $infoEmpresa[0];
                 $_SESSION['email'] = $infoEmpresa[1];
                 $_SESSION['cidade'] = $infoEmpresa[2];

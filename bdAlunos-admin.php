@@ -15,7 +15,6 @@ if(mysqli_num_rows($querySql) > 0){
                         <tr>
                             <th>Nome do Aluno</th>
                             <th>Nome da Mãe</th>
-                            <th>CPF</th>
                             <th>Curso</th>
                             <th>Semestre</th>
                             <th>Situação</th>
@@ -31,7 +30,6 @@ if(mysqli_num_rows($querySql) > 0){
 <tr>
     <td><?=$infoPendente[0]?></td>
     <td><?=$infoPendente[6]?></td>
-    <td>00000000000</td>
     <td><?=$infoPendente[3]?></td>
     <td><?=$infoPendente[4]?></td>
     <td>Pendente</td>

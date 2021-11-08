@@ -88,4 +88,7 @@ Excluir publicação - funcionando
 
   home atualizado para receber vagas de empresas e administradores, (** agora elas vão ser ordenadas pela data de publicação, antes era pelo id(mas bugaria ao juntar as duas))
 
+26/10
+  
+  Todos os botões do fórum funcionais e mudanças no banco de dados
 

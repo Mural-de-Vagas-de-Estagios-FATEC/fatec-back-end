@@ -8,7 +8,7 @@ $cnt = 0;
 $infoPesquisa = false;
 $j = 0;
 $situacao;
-$sqlQntd = "SELECT * FROM PENDENTE_EGRESSO";
+$sqlQntd = "SELECT * FROM pendente_egresso";
 $queryQntd = mysqli_query($mysqli,$sqlQntd); 
 
 if(mysqli_num_rows($queryQntd) > 0) {
@@ -19,7 +19,7 @@ if(isset($_POST['pesquisar'])){
     if($_POST['curso'] == 'Cadastrado'){
         if(!empty($_POST['txtNome'])){
             $nome = $_POST['txtNome'];
-            $sqlPesquisa = "SELECT * FROM egresso WHERE NOME LIKE '%$nome%'";
+            $sqlPesquisa = "SELECT * FROM usuarios WHERE NOME LIKE '%$nome%' AND SITUACAO = 'Egresso'";
             $queryPesquisa = mysqli_query($mysqli,$sqlPesquisa);
             if($queryPesquisa){
                 $infoPesquisa = mysqli_fetch_all($queryPesquisa);
@@ -28,7 +28,7 @@ if(isset($_POST['pesquisar'])){
             }
         }
         else {
-            $sqlPesquisa = 'SELECT * FROM egresso';
+            $sqlPesquisa = 'SELECT * FROM usuarios WHERE SITUACAO = "Egresso"';
             $queryPesquisa = mysqli_query($mysqli,$sqlPesquisa);
             if($queryPesquisa){
                 $infoPesquisa = mysqli_fetch_all($queryPesquisa);
@@ -40,8 +40,7 @@ if(isset($_POST['pesquisar'])){
     } 
     else{
         $nome = $_POST['txtNome'];
-        $nomeMae = $_POST['txtNomeMae'];
-        $sqlPesquisa = "SELECT * FROM PENDENTE_EGRESSO WHERE NOME  like '%$nome%' AND NOME_MAE like '%$nomeMae%'";
+        $sqlPesquisa = "SELECT * FROM pendente_egresso WHERE NOME  like '%$nome%' ORDER BY ID_PEND_EGRESSO DESC";
         $queryPesquisa = mysqli_query($mysqli,$sqlPesquisa);
         if($queryPesquisa){
             $infoPesquisa = mysqli_fetch_all($queryPesquisa);
@@ -53,10 +52,10 @@ if(isset($_POST['pesquisar'])){
 }
 if(isset($_POST['aceitar'])){
     $idAceitar = $_POST['aceitar'];
-    $sqlAceitar = "INSERT INTO egresso (NOME, EMAIL, SENHA, CURSO, IMAGEM) SELECT PENDENTE_EGRESSO.NOME, PENDENTE_EGRESSO.EMAIL, PENDENTE_EGRESSO.SENHA, PENDENTE_EGRESSO.CURSO, PENDENTE_EGRESSO.IMAGEM FROM PENDENTE_EGRESSO WHERE ID_PEND_EGRESSO = '$idAceitar'";
+    $sqlAceitar = "INSERT INTO usuarios (NOME, EMAIL, SENHA, CURSO, SEMESTRE, SITUACAO, IMAGEM) SELECT pendente_egresso.NOME, pendente_egresso.EMAIL, pendente_egresso.SENHA, pendente_egresso.CURSO, 'Concluido', 'Egresso', pendente_egresso.IMAGEM FROM pendente_egresso WHERE ID_PEND_EGRESSO = '$idAceitar'";
     $queryAceitar = mysqli_query($mysqli,$sqlAceitar);
     if($queryAceitar){
-        $sqlExcluir = "DELETE FROM PENDENTE_EGRESSO WHERE ID_PEND_EGRESSO = '$idAceitar'";
+        $sqlExcluir = "DELETE FROM pendente_egresso WHERE ID_PEND_EGRESSO = '$idAceitar'";
         $queryExcluir = mysqli_query($mysqli,$sqlExcluir);
         if($queryExcluir){
             $cnt--;
@@ -74,14 +73,14 @@ if(isset($_POST['aceitar'])){
     
 if(isset($_POST['excluir'])){
     $idExcluir = $_POST['excluir'];
-    $sqlImagem = "SELECT IMAGEM FROM PENDENTE_EGRESSO WHERE ID_PEND_EGRESSO = '$idExcluir'";
+    $sqlImagem = "SELECT IMAGEM FROM pendente_egresso WHERE ID_PEND_EGRESSO = '$idExcluir'";
     $queryImagem = mysqli_query($mysqli, $sqlImagem);
     if($queryImagem){
         $infoImagem = mysqli_fetch_row($queryImagem);
         if($infoImagem[0] != 'imagens/imagem-teste.jpg'){
                 unlink($infoImagem[0]);
             }
-        $sqlExcluir = "DELETE FROM PENDENTE_EGRESSO WHERE ID_PEND_EGRESSO = '$idExcluir'";
+        $sqlExcluir = "DELETE FROM pendente_egresso WHERE ID_PEND_EGRESSO = '$idExcluir'";
         $queryExcluir = mysqli_query($mysqli,$sqlExcluir);
         if($queryExcluir){
             $cnt--;
@@ -156,10 +155,7 @@ if(isset($_POST['excluirEgresso'])){
                                         <a href="estagio_obrigatorio.php">Estágio Obrigatório</a>
                                     </li>
                                     <li class="dropdown-link">
-                                        <a href="dicas_de_curriculo.php">Dicas de Currículo</a>
-                                    </li>
-                                    <li class="dropdown-link">
-                                        <a href="#" class="last">Carta de equivalencia</a>
+                                        <a href="dicas_de_curriculo.php" class="last">Dicas de Currículo</a>
                                     </li>
                                     <div class="arrow"></div>
                                 </ul>
@@ -217,10 +213,6 @@ if(isset($_POST['excluirEgresso'])){
                         <input type="text" name="txtNome" id="pesquisar" class="input" placeholder="Nome do Egresso">
                     </div>
                     <div class="campo-input">
-                        <label for="pesquisar">Nome da Mãe</label>
-                        <input type="text" name="txtNomeMae" id="pesquisar" class="input" placeholder="Nome da Mãe">
-                    </div>
-                    <div class="campo-input">
                         <label for="situacao">Situação</label>
                         <select class="input border" aria-label="Default select example" id="situacao" name="curso">
                             <option selected>Selecione uma situação</option>
@@ -243,10 +235,9 @@ if(isset($_POST['excluirEgresso'])){
                                     echo'Email';
                                 }
                                 else { 
-                                    echo'Nome da Mãe';
+                                    echo'CPF';
                                 }
                             ?></th>
-                            <th>CPF</th>
                             <th>Curso</th>
                             <th>Situação</th>
                             <th></th>
@@ -259,7 +250,6 @@ if(isset($_POST['excluirEgresso'])){
                         <tr>
                             <td><?=$infoPesquisa[$j][0]?></td>
                             <td><?=$infoPesquisa[$j][1]?></td>
-                            <td>00000000000</td>
                             <td><?=$infoPesquisa[$j][3]?></td>
                             <td>Cadastrado</td>
                             <td class="botoes-vagas">
@@ -275,7 +265,6 @@ if(isset($_POST['excluirEgresso'])){
                             <tr>
                             <td><?=$infoPesquisa[$j][0]?></td>
                             <td><?=$infoPesquisa[$j][4]?></td>
-                            <td>00000000000</td>
                             <td><?=$infoPesquisa[$j][3]?></td>
                             <td>Pendente</td>
                             <td class="botoes-vagas">

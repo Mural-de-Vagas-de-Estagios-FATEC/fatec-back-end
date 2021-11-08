@@ -44,10 +44,7 @@ if($_SESSION['situacao'] == 'Empresa'){
                                         <a href="estagio_obrigatorio.php">Estágio Obrigatório</a>
                                     </li>
                                     <li class="dropdown-link">
-                                        <a href="#">Dicas de Currículo</a>
-                                    </li>
-                                    <li class="dropdown-link">
-                                        <a href="#" class="last">Carta de equivalencia</a>
+                                        <a href="dicas_de_curriculo.php" class="last">Dicas de Currículo</a>
                                     </li>
                                     <div class="arrow"></div>
                                 </ul>
@@ -166,7 +163,7 @@ Neste item, ele deve descrever vivências que destacam suas qualidades e conheci
                             </ul>
                         </p>
                         <div class="link-download">
-                            <a href="#" style="font-size: 1.2rem; color: var(--cor-fatec);">Baixe um modelo de currículo para editar</a>
+                            <a href="Modelos_de_Currículo.zip" style="font-size: 1.2rem; color: var(--cor-fatec);">Baixe um modelo de currículo para editar</a>
                         </div>
 
                     </div>

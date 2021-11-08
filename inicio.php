@@ -17,7 +17,7 @@ if(mysqli_num_rows($queryVagas) > 0) {
 }
 if(isset($_POST['excluir'])){
     $idExcluir = $_POST['excluir'];
-    $sqlExcluir = "DELETE FROM VAGAS WHERE ID_VAGA=$idExcluir";
+    $sqlExcluir = "DELETE FROM vagas WHERE ID_VAGA=$idExcluir";
     $queryExcluir = mysqli_query($mysqli,$sqlExcluir);
     $cnt--;
     header("inicio.php");
@@ -40,6 +40,137 @@ if(isset($_POST['publicar'])){
         die("Erro no envio da vaga");
     }
 }
+// Area Perfil
+
+if(isset($_FILES['subImagem'])){
+    $id = $_SESSION['id'];
+    $extensao = strtolower(substr($_FILES['subImagem']['name'],-4));
+    $imagem = 'imagens/' . md5(time()) . $extensao;
+    move_uploaded_file($_FILES['subImagem']['tmp_name'], $imagem);
+
+    $sqlNovaImagem = "UPDATE empresa SET IMAGEM = '$imagem' WHERE ID_EMPRESA = '$id'";
+    $queryNovaImagem = mysqli_query($mysqli, $sqlNovaImagem);
+    $_SESSION['imagem'] = $imagem;
+    echo 'Imagem alterada';
+    
+}
+
+if(isset($_POST['deletarConta'])){
+    $id = $_SESSION['id'];
+    $sqlExcluirConta = "DELETE FROM empresa WHERE ID_EMPRESA = '$id'";
+    $queryExcluirConta = mysqli_query($mysqli, $sqlExcluirConta);
+    if($queryExcluirConta){
+        session_destroy();
+        header('Location: index.php');
+        exit;
+    }
+}
+
+if(isset($_POST['txtNome'])){
+
+    $id = $_SESSION['id'];
+    $novoNome = $_POST['txtNome'];
+    $novoEmail = $_POST['txtEmail'];
+    $novoSenha = $_POST['txtSenha'];
+    $novoTel = $_POST['txtTel'];
+    $novoCel = $_POST['txtCel'];
+    $novoCidade = $_POST['txtCidade'];
+    if($novoNome == '' || $novoEmail == '' || $novoTel == '' || $novoCel == '' || $novoCidade == ''){
+        echo 'Campos foram deixados em brancos';
+        exit();
+    }
+    $sqlEmail = "SELECT ID_EMPRESA, COUNT(ID_EMPRESA) FROM empresa WHERE EMAIL= '$novoEmail'";
+    $queryEmail = mysqli_query($mysqli, $sqlEmail);
+    if(mysqli_fetch_row($queryEmail)[0] == $id){// Se a busca pelo email retornar o mesmo id de quem fez a alterãção
+        if($novoSenha == ''){//Se não informaram uma nova senha, atualiza o banco de dados
+
+            $sqlAtualizar = "UPDATE empresa SET NOME = '$novoNome', EMAIL = '$novoEmail', CIDADE = '$novoCidade',
+            TELEFONE = '$novoTel', CELULAR = '$novoCel' WHERE ID_EMPRESA = '$id'";
+            if(mysqli_query($mysqli, $sqlAtualizar)){
+                echo "Atualizado com sucesso";
+                $_SESSION['nome'] = $novoNome;
+                $_SESSION['email'] = $novoEmail;
+                $_SESSION['cidade'] = $novoCidade;
+                $_SESSION['telefone'] = $novoTel;
+                $_SESSION['celular'] = $novoCel;
+                
+            }
+        }
+        else {
+            $novoSenha = password_hash($novoSenha, PASSWORD_BCRYPT);
+            $sqlAtualizar = "UPDATE empresa SET NOME = '$novoNome', EMAIL = '$novoEmail', CIDADE = '$novoCidade',
+            SENHA = '$novoSenha', TELEFONE = '$novoTel', CELULAR = '$novoCel' WHERE ID_EMPRESA = '$id'";
+            if(mysqli_query($mysqli, $sqlAtualizar)){
+                echo "Atualizado com sucesso";
+                $_SESSION['nome'] = $novoNome;
+                $_SESSION['email'] = $novoEmail;
+                $_SESSION['cidade'] = $novoCidade;
+                $_SESSION['telefone'] = $novoTel;
+                $_SESSION['celular'] = $novoCel;
+                
+            }
+        }
+            
+    }
+    else {
+        $sqlVerificaEmail = "SELECT ID_USUARIO, COUNT(ID_USUARIO) FROM usuarios WHERE EMAIL = '$novoEmail'";
+        $queryVerifica = mysqli_query($mysqli, $sqlVerificaEmail);
+        $sqlVerificaEmailAdmin = "SELECT ID_ADMIN, COUNT(ID_ADMIN) FROM admin WHERE EMAIL = '$novoEmail'";
+        $queryVerificaAdmin = mysqli_query($mysqli, $sqlVerificaEmailAdmin);
+        $sqlVerificaEmailEmpresa = "SELECT ID_EMPRESA, COUNT(ID_EMPRESA) FROM empresa WHERE EMAIL = '$novoEmail'";
+        $queryVerificaEmpresa = mysqli_query($mysqli, $sqlVerificaEmailEmpresa);
+        $sqlVerificaEmailP = "SELECT ID_PEND_USUARIO, COUNT(ID_PEND_USUARIO) FROM pendente_usuario WHERE EMAIL = '$novoEmail'";
+        $queryVerificaP = mysqli_query($mysqli, $sqlVerificaEmailP);
+
+        $sqlVerificaEmailPEmpresa = "SELECT ID_PEND_EMPRESA, COUNT(ID_PEND_EMPRESA) FROM pendente_empresa WHERE EMAIL = '$novoEmail'";
+        $queryVerificaPEmpresa = mysqli_query($mysqli, $sqlVerificaEmailPEmpresa);
+        if(mysqli_fetch_row($queryVerifica)[0] != ''){
+
+            die("Esse email já existe no sistema");
+        }
+        elseif (mysqli_fetch_row($queryVerificaAdmin)[0] != '') {
+            die("Esse email já existe no sistema");
+        }
+        elseif (mysqli_fetch_row($queryVerificaEmpresa)[0] != '') {
+            die("Esse email já existe no sistema");
+        }
+        elseif (mysqli_fetch_row($queryVerificaP)[0] != '') {
+            die("Esse email já existe no sistema");
+        }
+        elseif (mysqli_fetch_row($queryVerificaPEmpresa)[0] != '') {
+            die("Esse email já existe no sistema");
+        }
+        else {
+            if($novoSenha == ''){
+                $sqlAtualizar = "UPDATE empresa SET NOME = '$novoNome', EMAIL = '$novoEmail', CIDADE = '$novoCidade',
+                TELEFONE = '$novoTel', CELULAR = '$novoCel' WHERE ID_EMPRESA = '$id'";
+                if(mysqli_query($mysqli, $sqlAtualizar)){
+                    echo 'Atualizado com sucesso';
+                    $_SESSION['nome'] = $novoNome;
+                    $_SESSION['email'] = $novoEmail;
+                    $_SESSION['cidade'] = $novoCidade;
+                    $_SESSION['telefone'] = $novoTel;
+                    $_SESSION['celular'] = $novoCel;
+                    
+                }
+            }
+            else {
+                $novoSenha = password_hash($novoSenha, PASSWORD_BCRYPT);
+                $sqlAtualizar = "UPDATE empresa SET NOME = '$novoNome', EMAIL = '$novoEmail', CIDADE = '$novoCidade',
+                SENHA = '$novoSenha', TELEFONE = '$novoTel', CELULAR = '$novoCel' WHERE ID_EMPRESA = '$id'";
+                if(mysqli_query($mysqli, $sqlAtualizar)){
+                    echo 'Atualizado com sucesso';
+                    $_SESSION['nome'] = $novoNome;
+                    $_SESSION['email'] = $novoEmail;
+                    $_SESSION['cidade'] = $novoCidade;
+                    $_SESSION['telefone'] = $novoTel;
+                    $_SESSION['celular'] = $novoCel;
+                    
+                }
+            }
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -55,6 +186,7 @@ if(isset($_POST['publicar'])){
     <link rel="stylesheet" href="./public/css/grid.css">
     <link rel="stylesheet" href="./public/css/vagas.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;900&family=Sen:wght@400;700&display=swap" rel="stylesheet">
+    <script src="lado_esquerdo.js"></script>
     <style type="text/css">
         .link {
             background: none;
@@ -104,31 +236,38 @@ if(isset($_POST['publicar'])){
                         <div class="imagem-perfil center">
                             <img src="<?= $_SESSION['imagem']?>" alt="imagem da empresa">
                         </div>
+                        <form enctype="multipart/form-data" method="post" id="formImagem"></form>
                         <label class="input-upload center">
-                            <input type="file" name="" id="">
+                            <input type="file" name="subImagem" value="Imagem" id="fileImagem" form="formImagem" accept="image/png, image/jpeg" onchange="
+
+                            form.submit();
+                            ">
                             ALTERAR IMAGEM
                         </label>
                     </div>
+                    <form action="forum.php" method="post" id="formPerfil" name="formPerfil"></form>
                     <div class="texto-perfil">
                         Olá <?= $_SESSION['nome']?>, até o momento você divulgou <span id=" "><?=$cnt?></span> vagas em nossa plataforma.
                     </div>
                     <div class="dados-do-perfil">
                         <h3>Dados da empresa</h3>
                         <div class="dados">
-                            <p>Nome: <?=$_SESSION['nome']?></p>
-                            <p>E-mail: <?= $_SESSION['email']?></p>
-                            <hr>
-                            <p>Tel: <?= $_SESSION['telefone']?></p>
-                            <p>Cel: <?= $_SESSION['celular']?></p>
-                            <hr>
-                            <p>Cidade: <?= $_SESSION['cidade']?></p>
-                            <hr>
-                            <p>CNPJ: <?= $_SESSION['cnpj']?></p>
+                            Nome: <span id="pNome"><?=$_SESSION['nome']?></span><br>
+                            E-mail: <span id="pEmail"><?=$_SESSION['email']?></span><br>
+                            <span id='spanSenha'></span>
+                            <hr id="remove1"><br id="remove4">
+                            Tel: <span id="pTel"><?=$_SESSION['telefone']?></span><br>
+                            Cel: <span id="pCel"><?=$_SESSION['celular']?></span><br>
+                            <hr id="remove2"><br id="remove5">
+                            Cidade: <span id="pCidade"><?=$_SESSION['cidade']?></span><br id="remove6"><br>
+                            <hr id="remove3"><br id="remove6">
+                            <span>CNPJ: <?= $_SESSION['cnpj']?></span>
                         </div>
                         <div class="botoes-perfil">
-                            <button class="botao-perfil">Editar conta</button>
-                            <button class="botao-perfil">Excluir conta</button>
+                            <button class="botao-perfil" name="btnEditarConta" id="btnEditarConta" onclick="editarContaE();">Editar conta</button>
+                            <button class="botao-perfil" name="btnExcluirConta" id="btnExcluirConta"onclick="excluirConta(<?= $_SESSION['id']?>);">Excluir conta</button>
                         </div>
+                        <div id="hidden_form_container" style="display:none;"></div>
                     </div>
                 </div>
                 

@@ -7,7 +7,7 @@ if(isset($_SESSION['nome'])){//se estiver logado, encaminha para a tela de home
 if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
     $nome = $_POST['txtNome'];
     $email = $_POST['txtEmail'];
-    $cidade = $_POST['cboCidade'];
+    $cidade = $_POST['txtCidade'];
     $senha = password_hash($_POST['txtSenha'], PASSWORD_BCRYPT);
     $cnpj = $_POST['txtCnpj'];
     $telefone = $_POST['txtTel'];
@@ -20,22 +20,21 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
         $imagem = 'imagens/' . md5(time()) . $extensao;
     }
     
-    $sqlEmail = "INSERT INTO PENDENTE_EMPRESA (NOME, EMAIL, CIDADE, SENHA, CNPJ, TELEFONE, CELULAR, IMAGEM)
+    $sqlEmail = "INSERT INTO pendente_empresa (NOME, EMAIL, CIDADE, SENHA, CNPJ, TELEFONE, CELULAR, IMAGEM)
                 SELECT '$nome', '$email', '$cidade', '$senha', '$cnpj', '$telefone', '$celular', '$imagem'
                 WHERE 
-                    NOT EXISTS ( SELECT EMAIL FROM PENDENTE_EMPRESA WHERE EMAIL = '$email' ) AND
-                    NOT EXISTS ( SELECT EMAIL FROM PENDENTE_EGRESSO WHERE EMAIL = '$email' ) AND
-                    NOT EXISTS ( SELECT EMAIL FROM PENDENTE_USUARIO WHERE EMAIL = '$email' ) AND
-                    NOT EXISTS ( SELECT EMAIL FROM EMPRESA WHERE EMAIL = '$email' ) AND
-                    NOT EXISTS ( SELECT EMAIL FROM EGRESSO WHERE EMAIL = '$email' ) AND
-                    NOT EXISTS ( SELECT EMAIL FROM USUÁRIOS WHERE EMAIL = '$email' )";
+                    NOT EXISTS ( SELECT EMAIL FROM pendente_empresa WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM pendente_egresso WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM pendente_usuario WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM empresa WHERE EMAIL = '$email' ) AND
+                    NOT EXISTS ( SELECT EMAIL FROM usuarios WHERE EMAIL = '$email' )";
     $queryEmail = mysqli_query($mysqli,$sqlEmail);
       
         if($queryEmail){//se o banco de dados fizer o registro
             if($imagem != 'imagens/imagem-teste.jpg'){
                 move_uploaded_file($_FILES['imagem']['tmp_name'], $imagem);
             }
-            header("Location: index.php");//redireciona o usuário para a página principal
+            header("Location: cadastrado.php");//redireciona o usuário para a página principal
             exit();
         }
         else {
@@ -66,6 +65,7 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
 
     <link rel="stylesheet" href="public/css/cadastro_empresa.css">
     <script src="public/js/cadastro_empresa.js"></script>
+    <link rel="stylesheet" href="./public/css/arq_de_mudancas.css">
 
     <title>Cadastro Empresa</title>
 </head>
@@ -91,8 +91,11 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
 
             <div class="div2 cadastro_div">
                 <input type="image" src="public/assets/perfil.png" width="105px" height="105px" alt="" id="imgPerfil">
-                    <input type="file" value="Escolher imagem" name="imagem" accept="image/png, image/jpeg" onchange="loadFile(event)" 
+                <label class="input-upload center">
+                    <input type="file"  name="imagem" accept="image/png, image/jpeg" onchange="loadFile(event)" 
                     id="btnImagem">
+                    ESCOLHER IMAGEM
+                </label>
             </div>
 
             <div class="div3 cadastro_div">
@@ -101,9 +104,7 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
             </div>
             <div class="div4 cadastro_div">
                 <label for="cboCidade">Cidade</label>
-                <select id="cboCidade" name="cboCidade" class="cbo">
-                    <option>Itaquaquecetuba</option>
-                </select>
+                <input type="input" type="text" name="txtCidade" id="cboCidade" class="input">
             </div>
             <div class="div5 cadastro_div">
                 <label for="txtSenha">Senha</label>
@@ -129,12 +130,14 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
                 <label for="txtCel">Celular</label>
                 <input type="text" name="txtCel" id="txtCel" class="input" data-contato>
             </div>
-            <!-- <div class="termos">
-                <label for="checkTermos">Termos</label>
-    
-                <input type="checkbox" name="checkTermos" id="checkTermos">
-            </div> -->
         </div>
+        <div class="center">
+                <div class="termos-e-privacidade">
+                    <input type="checkbox" name="" id="politicas">
+                    <label for="politicas">
+                        Eu li e concordo com os <a href="#politica-de-privacidade">Termos de Uso e Política de Privacidade</a>.
+                </div>
+            </div>
         </form>
     </div>
     <div class="conteudo_botao">
@@ -153,6 +156,14 @@ if(isset($_POST['subCadastrar'])){//se o botão de cadastrar for apertado
 
         </div>
     </footer>
+    <div class="modal" id="politica-de-privacidade">
+        <div>
+          <a href="#" class="close">x</a>
+          <div id="texto-politica"></div>
+        </div>
+    </div>
+    <script src="./public/js/politica.js"></script>
+    <script src="./public/js/mascara_empresa.js"></script>
 </body>
 
 

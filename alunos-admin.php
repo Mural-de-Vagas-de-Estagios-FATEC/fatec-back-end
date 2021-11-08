@@ -7,8 +7,13 @@ if($_SESSION['situacao'] != 'Admin'){
 $cnt = 0;
 $infoPesquisa = false;
 $j = 0;
+<<<<<<< HEAD
 $situacao = "";
 $sqlQntd = "SELECT * FROM PENDENTE_USUARIO";
+=======
+$situacao;
+$sqlQntd = "SELECT * FROM pendente_usuario";
+>>>>>>> 7078e24814c0c2727171ff2d67dcdc14d4ec6967
 $queryQntd = mysqli_query($mysqli,$sqlQntd); 
 
 if(mysqli_num_rows($queryQntd) > 0) {
@@ -19,7 +24,7 @@ if(isset($_POST['pesquisar'])){
     if($_POST['curso'] == 'Cadastrado'){
         if(!empty($_POST['txtNome'])){
             $nome = $_POST['txtNome'];
-            $sqlPesquisa = "SELECT * FROM usuários WHERE NOME LIKE '%$nome%'";
+            $sqlPesquisa = "SELECT * FROM usuarios WHERE NOME LIKE '%$nome%' AND WHERE SITUACAO = 'Aluno'";
             $queryPesquisa = mysqli_query($mysqli,$sqlPesquisa);
             if($queryPesquisa){
                 $infoPesquisa = mysqli_fetch_all($queryPesquisa);
@@ -28,7 +33,7 @@ if(isset($_POST['pesquisar'])){
             }
         }
         else {
-            $sqlPesquisa = 'SELECT * FROM usuários';
+            $sqlPesquisa = 'SELECT * FROM usuarios WHERE SITUACAO = "Aluno"';
             $queryPesquisa = mysqli_query($mysqli,$sqlPesquisa);
             if($queryPesquisa){
                 $infoPesquisa = mysqli_fetch_all($queryPesquisa);
@@ -41,7 +46,7 @@ if(isset($_POST['pesquisar'])){
     else{
         $nome = $_POST['txtNome'];
         $nomeMae = $_POST['txtNomeMae'];
-        $sqlPesquisa = "SELECT * FROM PENDENTE_USUARIO WHERE NOME  like '%$nome%' AND NOME_MAE like '%$nomeMae%'";
+        $sqlPesquisa = "SELECT * FROM pendente_usuario WHERE NOME  like '%$nome%' AND NOME_MAE like '%$nomeMae%' ORDER BY ID_PEND_USUARIO DESC";
         $queryPesquisa = mysqli_query($mysqli,$sqlPesquisa);
         if($queryPesquisa){
             $infoPesquisa = mysqli_fetch_all($queryPesquisa);
@@ -53,10 +58,10 @@ if(isset($_POST['pesquisar'])){
 }
 if(isset($_POST['aceitar'])){
     $idAceitar = $_POST['aceitar'];
-    $sqlAceitar = "INSERT INTO USUÁRIOS (NOME, EMAIL, SENHA, CURSO, SEMESTRE, IMAGEM) SELECT PENDENTE_USUARIO.NOME, PENDENTE_USUARIO.EMAIL, PENDENTE_USUARIO.SENHA, PENDENTE_USUARIO.CURSO, PENDENTE_USUARIO.SEMESTRE, PENDENTE_USUARIO.IMAGEM FROM PENDENTE_USUARIO WHERE ID_PEND_USUARIO = '$idAceitar'";
+    $sqlAceitar = "INSERT INTO usuarios (NOME, EMAIL, SENHA, CURSO, SEMESTRE, SITUACAO, IMAGEM) SELECT pendente_usuario.NOME, pendente_usuario.EMAIL, pendente_usuario.SENHA, pendente_usuario.CURSO, pendente_usuario.SEMESTRE, 'Aluno', pendente_usuario.IMAGEM FROM pendente_usuario WHERE ID_PEND_USUARIO = '$idAceitar'";
     $queryAceitar = mysqli_query($mysqli,$sqlAceitar);
     if($queryAceitar){
-        $sqlExcluir = "DELETE FROM PENDENTE_USUARIO WHERE ID_PEND_USUARIO = '$idAceitar'";
+        $sqlExcluir = "DELETE FROM pendente_usuario WHERE ID_PEND_USUARIO = '$idAceitar'";
         $queryExcluir = mysqli_query($mysqli,$sqlExcluir);
         if($queryExcluir){
             $cnt--;
@@ -74,14 +79,14 @@ if(isset($_POST['aceitar'])){
     
 if(isset($_POST['excluir'])){
     $idExcluir = $_POST['excluir'];
-    $sqlImagem = "SELECT IMAGEM FROM PENDENTE_USUARIO WHERE ID_PEND_USUARIO = '$idExcluir'";
+    $sqlImagem = "SELECT IMAGEM FROM pendente_usuario WHERE ID_PEND_USUARIO = '$idExcluir'";
     $queryImagem = mysqli_query($mysqli, $sqlImagem);
     if($queryImagem){
         $infoImagem = mysqli_fetch_row($queryImagem);
         if($infoImagem[0] != 'imagens/imagem-teste.jpg'){
                 unlink($infoImagem[0]);
             }
-        $sqlExcluir = "DELETE FROM PENDENTE_USUARIO WHERE ID_PEND_USUARIO = '$idExcluir'";
+        $sqlExcluir = "DELETE FROM pendente_usuario WHERE ID_PEND_USUARIO = '$idExcluir'";
         $queryExcluir = mysqli_query($mysqli,$sqlExcluir);
         if($queryExcluir){
             $cnt--;
@@ -95,14 +100,14 @@ if(isset($_POST['excluir'])){
 }
 if(isset($_POST['excluirAluno'])){
     $idExcluir = $_POST['excluirAluno'];
-    $sqlImagem = "SELECT IMAGEM FROM usuários WHERE ID_USUARIO = '$idExcluir'";
+    $sqlImagem = "SELECT IMAGEM FROM usuarios WHERE ID_USUARIO = '$idExcluir'";
     $queryImagem = mysqli_query($mysqli, $sqlImagem);
     if($queryImagem){
         $infoImagem = mysqli_fetch_row($queryImagem);
         if($infoImagem[0] != 'imagens/imagem-teste.jpg'){
                 unlink($infoImagem[0]);
             }
-        $sqlExcluir = "DELETE FROM usuários WHERE ID_USUARIO = '$idExcluir'";
+        $sqlExcluir = "DELETE FROM usuarios WHERE ID_USUARIO = '$idExcluir'";
         $queryExcluir = mysqli_query($mysqli,$sqlExcluir);
         if($queryExcluir){
             header('Location: alunos-admin.php');
@@ -156,10 +161,7 @@ if(isset($_POST['excluirAluno'])){
                                         <a href="estagio_obrigatorio.php">Estágio Obrigatório</a>
                                     </li>
                                     <li class="dropdown-link">
-                                        <a href="dicas_de_curriculo.php">Dicas de Currículo</a>
-                                    </li>
-                                    <li class="dropdown-link">
-                                        <a href="#" class="last">Carta de equivalencia</a>
+                                        <a href="dicas_de_curriculo.php" class="last">Dicas de Currículo</a>
                                     </li>
                                     <div class="arrow"></div>
                                 </ul>
