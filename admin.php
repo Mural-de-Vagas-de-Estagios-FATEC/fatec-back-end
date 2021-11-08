@@ -1,12 +1,14 @@
 <?php
-include("verificar_login.php");
-require_once('bd.php');
-if($_SESSION['situacao'] != 'Admin'){
-    header('Location: home.php');
+include ("verificar_login.php");
+require_once ('bd.php');
+if ($_SESSION['situacao'] != 'Admin')
+{
+header('Location: home.php');
 }
+
 $infoPesquisa = false;
 $j = 0;
-if(isset($_POST['publicar'])){
+if (isset($_POST['publicar'])) {
     $nomeEmpresa = $_POST['txtNomeEmpresa'];
     $nomeVaga = $_POST['txtNomeVaga'];
     $regime = $_POST['txtRegime'];
@@ -14,11 +16,10 @@ if(isset($_POST['publicar'])){
     $qntd = $_POST['nmbrQntd'];
     $cidade = $_POST['txtCidade'];
     $telefone = $_POST['txtTelefone'];
-    if($_FILES['imagem']['size'] != 0){
-        $extensao = strtolower(substr($_FILES['imagem']['name'],-4));
+    if ($_FILES['imagem']['size'] != 0) {
+        $extensao = strtolower(substr($_FILES['imagem']['name'], -4));
         $imagem = 'vagas/' . md5(time()) . $extensao;
-    }
-    else {
+    } else {
         $imagem = '';
     }
     $perfil = $_POST['txtaPerfil'];
@@ -26,44 +27,43 @@ if(isset($_POST['publicar'])){
     $autor = $_SESSION['id'];
 
     $sql = "INSERT INTO VAGAS_ADMIN (NOME_EMPRESA, NOME_VAGA, REGIME, CURSO, QUANTIDADE, CIDADE, TELEFONE, IMAGEM, PERFIL, DATA, AUTOR) VALUES ('$nomeEmpresa', '$nomeVaga', '$regime', '$curso', '$qntd', '$cidade', '$telefone', '$imagem', '$perfil', '$data', '$autor')";
-    $querySql = mysqli_query($mysqli,$sql);
-    if($querySql){
+    $querySql = mysqli_query($mysqli, $sql);
+    if ($querySql) {
         echo 'Enviado para o banco de dados';
-        if($imagem != ''){
+        if ($imagem != '') {
             move_uploaded_file($_FILES['imagem']['tmp_name'], $imagem);
         }
-    }
-    else{
+    } else {
         echo 'Erro';
     }
 }
-if(isset($_POST['pesquisar'])){
+if (isset($_POST['pesquisar'])) {
     $nomePesquisa = $_POST['pesquisaEmpresa'];
     $sqlPesquisa = "SELECT * FROM VAGAS_ADMIN WHERE NOME_EMPRESA LIKE '%$nomePesquisa%'";
-    $queryPesquisa = mysqli_query($mysqli,$sqlPesquisa);
-    if($queryPesquisa){
+    $queryPesquisa = mysqli_query($mysqli, $sqlPesquisa);
+    if ($queryPesquisa) {
         $infoPesquisa = mysqli_fetch_all($queryPesquisa);
         $j = sizeof($infoPesquisa) - 1;
     }
-} 
+}
 
-if(isset($_POST['excluir'])){
+if (isset($_POST['excluir'])) {
     $idExcluir = $_POST['excluir'];
     $sqlImagem = "SELECT IMAGEM FROM VAGAS_ADMIN WHERE ID_VAGAS_ADMIN = '$idExcluir'";
     $queryImagem = mysqli_query($mysqli, $sqlImagem);
-    if($queryImagem){
+    if ($queryImagem) {
         $infoImagem = mysqli_fetch_row($queryImagem);
-        if($infoImagem[0] != ''){
-                unlink($infoImagem[0]);
-            }
+        if ($infoImagem[0] != '') {
+            unlink($infoImagem[0]);
+        }
         $sqlExcluir = "DELETE FROM VAGAS_ADMIN WHERE ID_VAGAS_ADMIN = '$idExcluir'";
         $queryExcluir = mysqli_query($mysqli, $sqlExcluir);
-        if($queryExcluir){
+        if ($queryExcluir) {
             echo 'Excluido';
         }
     }
 }
-if(isset($_POST['editar'])){
+if (isset($_POST['editar'])) {
     $idEditar = $_POST['editar'];
     $editarNomeEmpresa = $_POST['nomeEmpresa' . $idEditar];
     $editarNomeVaga = $_POST['nomeVaga' . $idEditar];
@@ -72,13 +72,13 @@ if(isset($_POST['editar'])){
     $editarQntd = $_POST['qntd' . $idEditar];
     $editarCidade = $_POST['cidade' . $idEditar];
     $editarTelefone = $_POST['telefone' . $idEditar];
-    if($_FILES['imagem' . $idEditar]['size'] != 0){
-        $extensao = strtolower(substr($_FILES['imagem' . $idEditar]['name'],-4));
+    if ($_FILES['imagem' . $idEditar]['size'] != 0) {
+        $extensao = strtolower(substr($_FILES['imagem' . $idEditar]['name'], -4));
         $editarImagem = 'vagas/' . md5(time()) . $extensao;
         move_uploaded_file($_FILES['imagem' . $idEditar]['tmp_name'], $editarImagem);
         $sqlImagem = "SELECT IMAGEM FROM VAGAS_ADMIN WHERE ID_VAGAS_ADMIN = '$idEditar'";
         $queryImagem = mysqli_query($mysqli, $sqlImagem);
-        if($queryImagem){
+        if ($queryImagem) {
             $infoImagem = mysqli_fetch_row($queryImagem);
             unlink($infoImagem[0]);
             $sqlNovaImagem = "UPDATE VAGAS_ADMIN SET IMAGEM = '$editarImagem'";
@@ -89,7 +89,7 @@ if(isset($_POST['editar'])){
     $sqlEditar = "UPDATE VAGAS_ADMIN SET NOME_EMPRESA = '$editarNomeEmpresa', NOME_VAGA = '$editarNomeVaga', REGIME = 
     '$editarRegime', CURSO = '$editarCurso', QUANTIDADE = '$editarQntd', CIDADE = '$editarCidade', TELEFONE = '$editarTelefone', PERFIL = '$editarPerfil'";
     $queryEditar = mysqli_query($mysqli, $sqlEditar);
-    if($queryEditar){
+    if ($queryEditar) {
         echo 'Editado';
     }
 }

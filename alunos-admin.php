@@ -7,7 +7,7 @@ if($_SESSION['situacao'] != 'Admin'){
 $cnt = 0;
 $infoPesquisa = false;
 $j = 0;
-$situacao;
+$situacao = "";
 $sqlQntd = "SELECT * FROM PENDENTE_USUARIO";
 $queryQntd = mysqli_query($mysqli,$sqlQntd); 
 
